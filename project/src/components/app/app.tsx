@@ -1,5 +1,12 @@
+
+import Main from '../main/main';
+
 function App(): JSX.Element {
-  return <p>Hello, world!</p>;
+  return (
+    <div>
+      <Main count={3} />
+    </div>
+  );
 }
 
 export default App;
