@@ -1,3 +1,5 @@
+import React from 'react';
+
 type CardProps = {
   cardImg: string;
   priceValue: string;
@@ -9,7 +11,7 @@ type CardProps = {
 export default function ApartmentCard({ cardImg, priceValue, priceText, cardName, cardType }: CardProps): JSX.Element {
 
   return (
-    <div>
+    <article className="cities__place-card place-card">
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
@@ -42,6 +44,6 @@ export default function ApartmentCard({ cardImg, priceValue, priceText, cardName
         </h2>
         <p className="place-card__type">{cardType}</p>
       </div>
-    </div>
+    </article>
   );
 }
