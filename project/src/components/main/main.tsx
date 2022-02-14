@@ -143,8 +143,9 @@ function Main({ offersCount }: WellcomeScreenProps): JSX.Element {
                 </form>
                 <div className="cities__places-list places__list tabs__content">
                   {apartments.map((card) => (
-                    <ApartmentCard cardImg={card.cardImg}
+                    <ApartmentCard
                       key={card.id}
+                      cardImg={card.cardImg}
                       priceValue={card.priceValue}
                       priceText={card.priceText}
                       cardName={card.cardName}
