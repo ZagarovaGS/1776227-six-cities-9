@@ -1,0 +1,23 @@
+.not-found__img{
+  width: 35%;
+  height: 40%;
+  margin: 10%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.not-found{
+  background: #ccc;
+  text-align: center;
+  height: 90vh;
+}
+
+.not-found__title{
+  display: inline-block;
+  padding: 20px;
+  background-color: rgb(34, 38, 95);
+  color:white;
+  font-size: 40px;
+  font-family:monospace;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 10px;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 
 type CardProps = {
+  id: number;
   cardImg: string;
   priceValue: string;
   priceText: string;
@@ -8,7 +9,7 @@ type CardProps = {
   cardType: string;
 }
 
-export default function ApartmentCard({ cardImg, priceValue, priceText, cardName, cardType }: CardProps): JSX.Element {
+export default function ApartmentCard({ id, cardImg, priceValue, priceText, cardName, cardType }: CardProps): JSX.Element {
 
   return (
     <article className="cities__place-card place-card">
