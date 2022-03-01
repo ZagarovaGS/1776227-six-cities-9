@@ -1,7 +1,7 @@
-import Favorities from '../components/favorities/favorities';
+import Favorities, { FavoritesCardProps } from '../components/favorities/favorities';
 
-export default function FavoritiesPage() {
+export default function FavoritiesPage({ apartments }: FavoritesCardProps) {
   return (
-    <Favorities />
+    <Favorities apartments={apartments} />
   );
 }

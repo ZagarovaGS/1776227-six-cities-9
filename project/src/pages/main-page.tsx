@@ -1,11 +1,7 @@
-import Main from '../components/main/main';
+import Main, { MainProps } from '../components/main/main';
 
-type WellcomeScreenProps = {
-  offersCount: number;
-
-}
-export default function MainPage({ offersCount }: WellcomeScreenProps): JSX.Element {
+export default function MainPage({ offersCount, apartments }: MainProps): JSX.Element {
   return (
-    <Main offersCount={offersCount} />
+    <Main offersCount={offersCount} apartments={apartments} />
   );
 }

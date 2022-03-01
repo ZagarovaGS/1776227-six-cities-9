@@ -1,16 +1,6 @@
-import React from 'react';
+import { CardProp } from '../../types/offer-type';
 
-type CardProps = {
-  id: number;
-  cardImg: string;
-  priceValue: string;
-  priceText: string;
-  cardName: string;
-  cardType: string;
-}
-
-export default function ApartmentCard({ id, cardImg, priceValue, priceText, cardName, cardType }: CardProps): JSX.Element {
-
+export default function ApartmentCard({ id, previewImage, price, rating, title, type }: CardProp): JSX.Element {
   return (
     <article className="cities__place-card place-card">
       <div className="place-card__mark">
@@ -18,14 +8,14 @@ export default function ApartmentCard({ id, cardImg, priceValue, priceText, card
       </div>
       <div className="cities__image-wrapper place-card__image-wrapper">
         <a href="#">
-          <img className="place-card__image" src={cardImg} width="260" height="200" alt="Place image" />
+          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image" />
         </a>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{priceValue}</b>
-            <span className="place-card__price-text">&#47;&nbsp;{priceText}</span>
+            <b className="place-card__price-value">&euro;{price}</b>
+            <span className="place-card__price-text">&#47;&nbsp;euro</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
@@ -37,13 +27,13 @@ export default function ApartmentCard({ id, cardImg, priceValue, priceText, card
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
             <span style={{ width: '80%' }}></span>
-            <span className="visually-hidden">Rating</span>
+            <span className="visually-hidden">{rating}</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">Beautiful &amp; {cardName}</a>
+          <a href="#">Beautiful &amp; {title}</a>
         </h2>
-        <p className="place-card__type">{cardType}</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );
