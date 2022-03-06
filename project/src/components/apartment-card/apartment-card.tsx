@@ -1,20 +1,30 @@
-import { CardProp } from '../../types/offer-type';
+import { Link } from 'react-router-dom';
+import { CardProp, CardProps } from '../../types/offer-type';
 
-export default function ApartmentCard({ id, previewImage, price, rating, title, type }: CardProp): JSX.Element {
+export type ApartmentCardProps = {
+  apartment: CardProp;
+  activeCardHandler: Function;
+  apartments: CardProps,
+}
+export default function ApartmentCard({ apartment, activeCardHandler }: ApartmentCardProps): JSX.Element {
+
   return (
-    <article className="cities__place-card place-card">
+    <article className="cities__place-card place-card" onMouseEnter={() => {
+      activeCardHandler(apartment.id);
+    }
+    }>
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image" />
-        </a>
+        <Link to={`/offer/${apartment.id}`}>
+          <img className="place-card__image" src={apartment.previewImage} width="260" height="200" alt="Place image" />
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{price}</b>
+            <b className="place-card__price-value">&euro;{apartment.price}</b>
             <span className="place-card__price-text">&#47;&nbsp;euro</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
@@ -27,13 +37,13 @@ export default function ApartmentCard({ id, previewImage, price, rating, title, 
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
             <span style={{ width: '80%' }}></span>
-            <span className="visually-hidden">{rating}</span>
+            <span className="visually-hidden">{apartment.rating}</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">Beautiful &amp; {title}</a>
+          <Link to={`/offer/${apartment.id}`}>Beautiful &amp; {apartment.title}</Link>
         </h2>
-        <p className="place-card__type">{type}</p>
+        <p className="place-card__type">{apartment.type}</p>
       </div>
     </article>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
+import { CardProp } from '../../types/offer-type';
 
-export default function Property() {
+export default function Property({ id, previewImage, price, rating, title, type }: CardProp) {
   return (
     <div className="page">
       <main className="page__main page__main--property">
@@ -8,7 +9,7 @@ export default function Property() {
           <div className="property__gallery-container container">
             <div className="property__gallery">
               <div className="property__image-wrapper">
-                <img className="property__image" src="img/room.jpg" alt="Photo studio" />
+                <img className="property__image" src={previewImage} alt="Photo studio" />
               </div>
               <div className="property__image-wrapper">
                 <img className="property__image" src="img/apartment-01.jpg" alt="Photo studio" />
@@ -34,7 +35,7 @@ export default function Property() {
               </div>
               <div className="property__name-wrapper">
                 <h1 className="property__name">
-                  Beautiful &amp; luxurious studio at great location
+                  {title}
                 </h1>
                 <button className="property__bookmark-button button" type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
@@ -46,7 +47,7 @@ export default function Property() {
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
                   <span style={{ width: '80%' }}></span>
-                  <span className="visually-hidden">Rating</span>
+                  <span className="visually-hidden">{rating}</span>
                 </div>
                 <span className="property__rating-value rating__value">4.8</span>
               </div>
@@ -62,7 +63,7 @@ export default function Property() {
                 </li>
               </ul>
               <div className="property__price">
-                <b className="property__price-value">&euro;120</b>
+                <b className="property__price-value">&euro;{price}</b>
                 <span className="property__price-text">&nbsp;night</span>
               </div>
               <div className="property__inside">
@@ -138,7 +139,7 @@ export default function Property() {
                       <div className="reviews__rating rating">
                         <div className="reviews__stars rating__stars">
                           <span style={{ width: '80%' }}></span>
-                          <span className="visually-hidden">Rating</span>
+                          <span className="visually-hidden"></span>
                         </div>
                       </div>
                       <p className="reviews__text">
@@ -298,7 +299,7 @@ export default function Property() {
                   <h2 className="place-card__name">
                     <a href="#">Nice, cozy, warm big bed apartment</a>
                   </h2>
-                  <p className="place-card__type">Apartment</p>
+                  <p className="place-card__type">{type}</p>
                 </div>
               </article>
             </div>

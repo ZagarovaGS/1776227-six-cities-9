@@ -6,8 +6,8 @@ import FavoritiesPage from '../../pages/favorities-page';
 import LoginPage from '../../pages/login-page';
 import MainPage from '../../pages/main-page';
 import NotFoundPage from '../../pages/not-found-page';
+import ProtertyPage from '../../pages/property-page';
 import { CardProps } from '../../types/offer-type';
-import ApartmentLayout from '../apartment-layout';
 import Layout from '../layout';
 import PrivateRoute from '../private-route/private-route';
 
@@ -16,23 +16,24 @@ type AppProps = {
   offersCount: number;
   apartments: CardProps;
 }
-
 function App({ offersCount, apartments }: AppProps): JSX.Element {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path={AppRoute.Main} element={<Layout />}>
-          <Route index element={<MainPage offersCount={offersCount} apartments={apartments} />} />
-          <Route path={AppRoute.Favorites} element={<ApartmentLayout />}>
-            <Route index element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
-            <Route path={':id'} element={<ApartmentCardPage />} />
+  if (apartments) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path={AppRoute.Main} element={<Layout />}>
+            <Route index element={<MainPage offersCount={offersCount} apartments={apartments} />} />
+
+            <Route path={'offer/:id'} element={<ProtertyPage />} />
+
+            <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-        <Route path={AppRoute.Login} element={<LoginPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+          <Route path={AppRoute.Login} element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  };
 }
 
 export default App;

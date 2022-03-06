@@ -1,17 +1,25 @@
 import { useParams } from 'react-router-dom';
-import ApartmentCard from '../components/apartment-card/apartment-card';
+import ApartmentCard, { ApartmentCardProps } from '../components/apartment-card/apartment-card';
 import { apartments } from '../mocks/offer';
+import { CardProp, CardProps } from '../types/offer-type';
 
-export default function ApartmentCardPage() {
+type ApartmentPageProps = {
+  activeCardHandler: Function;
+}
+export default function ApartmentCardPage({ activeCardHandler }: ApartmentPageProps) {
   const params = useParams();
   const id = Number(params.id);
-  return (
-    <ApartmentCard
-      previewImage={apartments[id - 1].previewImage}
-      price={apartments[id - 1].price}
-      rating={apartments[id - 1].rating}
-      title={apartments[id - 1].title}
-      type={apartments[id - 1].type}
-    />
-  );
+  const apartment = apartments.find((item) => item.id === id)!;
+  if (apartments) {
+    return (
+      <ApartmentCard
+        previewImage={apartment.previewImage}
+        price={apartment.price}
+        rating={apartment.rating}
+        title={apartment.title}
+        type={apartment.type}
+        activeCardHandler={activeCardHandler}
+      />
+    );
+  };
 }

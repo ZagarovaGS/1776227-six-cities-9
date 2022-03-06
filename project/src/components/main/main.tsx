@@ -1,17 +1,20 @@
-import React from 'react';
-import { CardProp } from '../../types/offer-type';
+import React, { useState } from 'react';
+import { CardProp, CardProps } from '../../types/offer-type';
 import ApartmentCard from '../apartment-card/apartment-card';
-
-type CardProps = CardProp[];
 
 export type MainProps = {
   offersCount: number;
   apartments: CardProps;
 }
 
-
 function Main({ apartments, offersCount }: MainProps): JSX.Element {
-
+  let [activeApartment, setActiveApartment] = useState<CardProps | null>(null);
+  const activeCardHandler = (id: number) => {
+    setActiveApartment([
+      ...apartments.slice(id - 1, 1)
+    ])
+  }
+  console.log(activeApartment)
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
@@ -72,7 +75,7 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
+              <div className="cities__places-list places__list tabs__content" >
                 {apartments.map((card) => (
                   <ApartmentCard
                     id={card.id}
@@ -82,6 +85,7 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
                     rating={card.rating}
                     title={card.title}
                     type={card.type}
+                    activeCardHandler={activeCardHandler}
                   />
                 ),
                 )};
@@ -97,3 +101,4 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
   );
 }
 export default Main;
+
