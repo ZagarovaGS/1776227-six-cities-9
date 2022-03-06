@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { CardProps } from '../../types/offer-type';
+import { Apartment, Apartments } from '../../types/offer-type';
 import ApartmentCard from '../apartment-card/apartment-card';
 
 export type MainProps = {
   offersCount: number;
-  apartments: CardProps;
+  apartments: Apartments;
 }
 
 function Main({ apartments, offersCount }: MainProps): JSX.Element {
-  const [activeApartment, setActiveApartment] = useState<CardProps | null>(null);
-  const activeCardHandler = (id: number) => {
-    setActiveApartment([
-      ...apartments.slice(id - 1, 1),
-    ]);
+  const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
+  const activeCardHandler = (apartment: Apartment | null) => {
+    setActiveApartment(apartment);
   };
   console.log(activeApartment);
+
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
@@ -55,6 +54,7 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
             </ul>
           </section>
         </div>
+        {activeApartment?.id}
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
@@ -76,15 +76,10 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content" >
-                {apartments.map((card) => (
+                {apartments.map((apartment) => (
                   <ApartmentCard
-                    id={card.id}
-                    key={card.id}
-                    previewImage={card.previewImage}
-                    price={card.price}
-                    rating={card.rating}
-                    title={card.title}
-                    type={card.type}
+                    key={apartment.id}
+                    apartment={apartment}
                     activeCardHandler={activeCardHandler}
                   />
                 ),

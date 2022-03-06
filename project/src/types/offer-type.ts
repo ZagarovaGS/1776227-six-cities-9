@@ -16,14 +16,14 @@ export type Host = {
   name: string,
 };
 
-export type CardProp = {
+export type Apartment = {
   bedrooms: number,
   city: City,
   description: string,
-  goods: [string],
+  goods: string[],
   host: Host,
   id: number,
-  images: [string],
+  images: string[],
   isFavorite: boolean,
   isPremium: boolean,
   location: Location,
@@ -35,4 +35,4 @@ export type CardProp = {
   type: string,
 };
 
-export type CardProps = CardProp[];
+export type Apartments = Apartment[];

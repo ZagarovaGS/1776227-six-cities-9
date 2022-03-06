@@ -1,6 +1,6 @@
-import { CardProps } from '../types/offer-type';
+import {Apartments} from '../types/offer-type';
 
-export const apartments: CardProps = [
+export const apartments: Apartments = [
   {
     'bedrooms': 3,
     'city': {

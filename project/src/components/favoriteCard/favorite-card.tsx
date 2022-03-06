@@ -1,8 +1,12 @@
-import { Link } from 'react-router-dom';
-import { CardProp } from '../../types/offer-type';
+import {Link} from 'react-router-dom';
+import {Apartment} from '../../types/offer-type';
 
 
-export default function FavoriteCard({ id, previewImage, price, rating, title, type }: CardProp) {
+type FavoriteCardProps = {
+  apartment: Apartment;
+}
+export default function FavoriteCard({apartment}: FavoriteCardProps) {
+  const {id, previewImage, price, rating, title, type} = apartment;
   return (
     <article className="favorites__card place-card">
       <div className="place-card__mark">
@@ -10,7 +14,7 @@ export default function FavoriteCard({ id, previewImage, price, rating, title, t
       </div>
       <div className="favorites__image-wrapper place-card__image-wrapper">
         <Link to={`/offer/${id}`}>
-          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place image" />
+          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place image"/>
         </Link>
       </div>
       <div className="favorites__card-info place-card__info">
@@ -28,7 +32,7 @@ export default function FavoriteCard({ id, previewImage, price, rating, title, t
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '100 %' }}></span>
+            <span style={{width: '100 %'}}></span>
             <span className="visually-hidden">{rating}</span>
           </div>
         </div>

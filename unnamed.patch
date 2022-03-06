@@ -1,0 +1,631 @@
+Index: project/src/components/apartment-card/apartment-card.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/apartment-card/apartment-card.tsx b/project/src/components/apartment-card/apartment-card.tsx
+--- a/project/src/components/apartment-card/apartment-card.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/apartment-card/apartment-card.tsx	(date 1646569306205)
+@@ -1,15 +1,17 @@
+-import { Link } from 'react-router-dom';
+-import { CardProp } from '../../types/offer-type';
++import {Link} from 'react-router-dom';
++import {Apartment} from '../../types/offer-type';
+
+ export type ApartmentCardProps = {
+-  activeCardHandler: (id: number) => void;
+-  apartment: CardProp;
++  activeCardHandler: (apartment: Apartment | null) => void;
++  apartment: Apartment;
+ }
+-export default function ApartmentCard({ apartment, activeCardHandler }: ApartmentCardProps): JSX.Element {
+-  const { id, price, title, type, rating, previewImage } = apartment;
++export default function ApartmentCard({apartment, activeCardHandler}: ApartmentCardProps): JSX.Element {
++  const {id, price, title, type, rating, previewImage} = apartment;
+   return (
+     <article className="cities__place-card place-card" onMouseEnter={() => {
+-      activeCardHandler(id);
++      activeCardHandler(apartment);
++    }} onMouseLeave={() => {
++      activeCardHandler(null);
+     }}
+     >
+       <div className="place-card__mark">
+@@ -17,7 +19,7 @@
+       </div>
+       <div className="cities__image-wrapper place-card__image-wrapper">
+         <Link to={`/offer/${apartment.id}`}>
+-          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image" />
++          <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image"/>
+         </Link>
+       </div>
+       <div className="place-card__info">
+@@ -35,7 +37,7 @@
+         </div>
+         <div className="place-card__rating rating">
+           <div className="place-card__stars rating__stars">
+-            <span style={{ width: '80%' }}></span>
++            <span style={{width: '80%'}}></span>
+             <span className="visually-hidden">{rating}</span>
+           </div>
+         </div>
+Index: project/src/components/favoriteCard/favorite-card.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/favoriteCard/favorite-card.tsx b/project/src/components/favoriteCard/favorite-card.tsx
+--- a/project/src/components/favoriteCard/favorite-card.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/favoriteCard/favorite-card.tsx	(date 1646569660261)
+@@ -1,8 +1,12 @@
+-import { Link } from 'react-router-dom';
+-import { CardProp } from '../../types/offer-type';
++import {Link} from 'react-router-dom';
++import {Apartment} from '../../types/offer-type';
+
+
+-export default function FavoriteCard({ id, previewImage, price, rating, title, type }: CardProp) {
++type FavoriteCardProps = {
++  apartment: Apartment;
++}
++export default function FavoriteCard({apartment}: FavoriteCardProps) {
++  const {id, previewImage, price, rating, title, type} = apartment;
+   return (
+     <article className="favorites__card place-card">
+       <div className="place-card__mark">
+@@ -10,7 +14,7 @@
+       </div>
+       <div className="favorites__image-wrapper place-card__image-wrapper">
+         <Link to={`/offer/${id}`}>
+-          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place image" />
++          <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place image"/>
+         </Link>
+       </div>
+       <div className="favorites__card-info place-card__info">
+@@ -28,7 +32,7 @@
+         </div>
+         <div className="place-card__rating rating">
+           <div className="place-card__stars rating__stars">
+-            <span style={{ width: '100 %' }}></span>
++            <span style={{width: '100 %'}}></span>
+             <span className="visually-hidden">{rating}</span>
+           </div>
+         </div>
+Index: project/src/components/property/property.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/property/property.tsx b/project/src/components/property/property.tsx
+--- a/project/src/components/property/property.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/property/property.tsx	(date 1646569140461)
+@@ -1,7 +1,11 @@
+ import React from 'react';
+-import { CardProp } from '../../types/offer-type';
++import {Apartment} from '../../types/offer-type';
+
+-export default function Property({ id, previewImage, price, rating, title, type }: CardProp) {
++export type PropertyProps = {
++  apartment: Apartment;
++}
++export default function Property({apartment}: PropertyProps) {
++  const {id, previewImage, price, rating, title, type} = apartment;
+   return (
+     <div className="page">
+       <main className="page__main page__main--property">
+@@ -9,22 +13,22 @@
+           <div className="property__gallery-container container">
+             <div className="property__gallery">
+               <div className="property__image-wrapper">
+-                <img className="property__image" src={previewImage} alt="Photo studio" />
++                <img className="property__image" src={previewImage} alt="Photo studio"/>
+               </div>
+               <div className="property__image-wrapper">
+-                <img className="property__image" src="img/apartment-01.jpg" alt="Photo studio" />
++                <img className="property__image" src="img/apartment-01.jpg" alt="Photo studio"/>
+               </div>
+               <div className="property__image-wrapper">
+-                <img className="property__image" src="img/apartment-02.jpg" alt="Photo studio" />
++                <img className="property__image" src="img/apartment-02.jpg" alt="Photo studio"/>
+               </div>
+               <div className="property__image-wrapper">
+-                <img className="property__image" src="img/apartment-03.jpg" alt="Photo studio" />
++                <img className="property__image" src="img/apartment-03.jpg" alt="Photo studio"/>
+               </div>
+               <div className="property__image-wrapper">
+-                <img className="property__image" src="img/studio-01.jpg" alt="Photo studio" />
++                <img className="property__image" src="img/studio-01.jpg" alt="Photo studio"/>
+               </div>
+               <div className="property__image-wrapper">
+-                <img className="property__image" src="img/apartment-01.jpg" alt="Photo studio" />
++                <img className="property__image" src="img/apartment-01.jpg" alt="Photo studio"/>
+               </div>
+             </div>
+           </div>
+@@ -46,7 +50,7 @@
+               </div>
+               <div className="property__rating rating">
+                 <div className="property__stars rating__stars">
+-                  <span style={{ width: '80%' }}></span>
++                  <span style={{width: '80%'}}></span>
+                   <span className="visually-hidden">{rating}</span>
+                 </div>
+                 <span className="property__rating-value rating__value">4.8</span>
+@@ -105,7 +109,8 @@
+                 <h2 className="property__host-title">Meet the host</h2>
+                 <div className="property__host-user user">
+                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
+-                    <img className="property__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74" alt="Host avatar" />
++                    <img className="property__avatar user__avatar" src="img/avatar-angelina.jpg" width="74" height="74"
++                         alt="Host avatar"/>
+                   </div>
+                   <span className="property__user-name">
+                     Angelina
+@@ -116,10 +121,12 @@
+                 </div>
+                 <div className="property__description">
+                   <p className="property__text">
+-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
++                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The
++                    building is green and from 18th century.
+                   </p>
+                   <p className="property__text">
+-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
++                    An independent House, strategically located between Rembrand Square and National Opera, but where
++                    the bustle of the city comes to rest in this alley flowery and colorful.
+                   </p>
+                 </div>
+               </div>
+@@ -129,7 +136,8 @@
+                   <li className="reviews__item">
+                     <div className="reviews__user user">
+                       <div className="reviews__avatar-wrapper user__avatar-wrapper">
+-                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54" alt="Reviews avatar" />
++                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54"
++                             alt="Reviews avatar"/>
+                       </div>
+                       <span className="reviews__user-name">
+                         Max
+@@ -138,12 +146,13 @@
+                     <div className="reviews__info">
+                       <div className="reviews__rating rating">
+                         <div className="reviews__stars rating__stars">
+-                          <span style={{ width: '80%' }}></span>
++                          <span style={{width: '80%'}}></span>
+                           <span className="visually-hidden"></span>
+                         </div>
+                       </div>
+                       <p className="reviews__text">
+-                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
++                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.
++                        The building is green and from 18th century.
+                       </p>
+                       <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
+                     </div>
+@@ -152,47 +161,55 @@
+                 <form className="reviews__form form" action="#" method="post">
+                   <label className="reviews__label form__label" htmlFor="review">Your review</label>
+                   <div className="reviews__rating-form form__rating">
+-                    <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" />
++                    <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars"
++                           type="radio"/>
+                     <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
+                       <svg className="form__star-image" width="37" height="33">
+                         <use xlinkHref="#icon-star"></use>
+                       </svg>
+                     </label>
+
+-                    <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" />
++                    <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars"
++                           type="radio"/>
+                     <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
+                       <svg className="form__star-image" width="37" height="33">
+                         <use xlinkHref="#icon-star"></use>
+                       </svg>
+                     </label>
+
+-                    <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" />
++                    <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars"
++                           type="radio"/>
+                     <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
+                       <svg className="form__star-image" width="37" height="33">
+                         <use xlinkHref="#icon-star"></use>
+                       </svg>
+                     </label>
+
+-                    <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" />
++                    <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars"
++                           type="radio"/>
+                     <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
+                       <svg className="form__star-image" width="37" height="33">
+                         <use xlinkHref="#icon-star"></use>
+                       </svg>
+                     </label>
+
+-                    <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" />
++                    <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star"
++                           type="radio"/>
+                     <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
+                       <svg className="form__star-image" width="37" height="33">
+                         <use xlinkHref="#icon-star"></use>
+                       </svg>
+                     </label>
+                   </div>
+-                  <textarea className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
++                  <textarea className="reviews__textarea form__textarea" id="review" name="review"
++                            placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+                   <div className="reviews__button-wrapper">
+                     <p className="reviews__help">
+-                      To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
++                      To submit review please make sure to set <span className="reviews__star">rating</span> and
++                      describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
+                     </p>
+-                    <button className="reviews__submit form__submit button" type="submit" disabled={false}>Submit</button>
++                    <button className="reviews__submit form__submit button" type="submit" disabled={false}>Submit
++                    </button>
+                   </div>
+                 </form>
+               </section>
+@@ -207,7 +224,7 @@
+               <article className="near-places__card place-card">
+                 <div className="near-places__image-wrapper place-card__image-wrapper">
+                   <a href="#">
+-                    <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image" />
++                    <img className="place-card__image" src="img/room.jpg" width="260" height="200" alt="Place image"/>
+                   </a>
+                 </div>
+                 <div className="place-card__info">
+@@ -216,7 +233,8 @@
+                       <b className="place-card__price-value">&euro;80</b>
+                       <span className="place-card__price-text">&#47;&nbsp;night</span>
+                     </div>
+-                    <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
++                    <button className="place-card__bookmark-button place-card__bookmark-button--active button"
++                            type="button">
+                       <svg className="place-card__bookmark-icon" width="18" height="19">
+                         <use xlinkHref="#icon-bookmark"></use>
+                       </svg>
+@@ -225,7 +243,7 @@
+                   </div>
+                   <div className="place-card__rating rating">
+                     <div className="place-card__stars rating__stars">
+-                      <span style={{ width: '80%' }}></span>
++                      <span style={{width: '80%'}}></span>
+                       <span className="visually-hidden">Rating</span>
+                     </div>
+                   </div>
+@@ -239,7 +257,8 @@
+               <article className="near-places__card place-card">
+                 <div className="near-places__image-wrapper place-card__image-wrapper">
+                   <a href="#">
+-                    <img className="place-card__image" src="img/apartment-02.jpg" width="260" height="200" alt="Place image" />
++                    <img className="place-card__image" src="img/apartment-02.jpg" width="260" height="200"
++                         alt="Place image"/>
+                   </a>
+                 </div>
+                 <div className="place-card__info">
+@@ -257,7 +276,7 @@
+                   </div>
+                   <div className="place-card__rating rating">
+                     <div className="place-card__stars rating__stars">
+-                      <span style={{ width: '80%' }}></span>
++                      <span style={{width: '80%'}}></span>
+                       <span className="visually-hidden">Rating</span>
+                     </div>
+                   </div>
+@@ -274,7 +293,8 @@
+                 </div>
+                 <div className="near-places__image-wrapper place-card__image-wrapper">
+                   <a href="#">
+-                    <img className="place-card__image" src="img/apartment-03.jpg" width="260" height="200" alt="Place image" />
++                    <img className="place-card__image" src="img/apartment-03.jpg" width="260" height="200"
++                         alt="Place image"/>
+                   </a>
+                 </div>
+                 <div className="place-card__info">
+@@ -292,7 +312,7 @@
+                   </div>
+                   <div className="place-card__rating rating">
+                     <div className="place-card__stars rating__stars">
+-                      <span style={{ width: '100%' }}></span>
++                      <span style={{width: '100%'}}></span>
+                       <span className="visually-hidden">Rating</span>
+                     </div>
+                   </div>
+Index: project/src/pages/property-page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/pages/property-page.tsx b/project/src/pages/property-page.tsx
+--- a/project/src/pages/property-page.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/pages/property-page.tsx	(date 1646569665905)
+@@ -1,21 +1,14 @@
+ import Property from '../components/property/property';
+-import { useParams } from 'react-router-dom';
+-import { apartments } from '../mocks/offer';
++import {useParams} from 'react-router-dom';
++import {apartments} from '../mocks/offer';
+
+-export default function ProtertyPage() {
++export default function PropertyPage() {
+   const params = useParams();
+   const id = Number(params.id);
+   const apartment = apartments.find((item) => item.id === id)!;
+
+   return (
+-    <Property
+-      previewImage={apartment.previewImage}
+-      price={apartment.price}
+-      rating={apartment.rating}
+-      title={apartment.title}
+-      type={apartment.type}
+-    />
++    <Property apartment={apartment}/>
+   );
+-
+ }
+
+Index: project/src/components/main/main.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/main/main.tsx b/project/src/components/main/main.tsx
+--- a/project/src/components/main/main.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/main/main.tsx	(date 1646569342598)
+@@ -1,18 +1,16 @@
+ import React, { useState } from 'react';
+-import { CardProps } from '../../types/offer-type';
++import {Apartment, Apartments} from '../../types/offer-type';
+ import ApartmentCard from '../apartment-card/apartment-card';
+
+ export type MainProps = {
+   offersCount: number;
+-  apartments: CardProps;
++  apartments: Apartments;
+ }
+
+ function Main({ apartments, offersCount }: MainProps): JSX.Element {
+-  const [activeApartment, setActiveApartment] = useState<CardProps | null>(null);
+-  const activeCardHandler = (id: number) => {
+-    setActiveApartment([
+-      ...apartments.slice(id - 1, 1),
+-    ]);
++  const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
++  const activeCardHandler = (apartment: Apartment|null) => {
++    setActiveApartment(apartment);
+   };
+   console.log(activeApartment);
+   return (
+@@ -55,6 +53,7 @@
+             </ul>
+           </section>
+         </div>
++        {activeApartment?.id}
+         <div className="cities">
+           <div className="cities__places-container container">
+             <section className="cities__places places">
+@@ -76,15 +75,10 @@
+                 </ul>
+               </form>
+               <div className="cities__places-list places__list tabs__content" >
+-                {apartments.map((card) => (
++                {apartments.map((apartment) => (
+                   <ApartmentCard
+-                    id={card.id}
+-                    key={card.id}
+-                    previewImage={card.previewImage}
+-                    price={card.price}
+-                    rating={card.rating}
+-                    title={card.title}
+-                    type={card.type}
++                    key={apartment.id}
++                    apartment={apartment}
+                     activeCardHandler={activeCardHandler}
+                   />
+                 ),
+Index: project/src/components/favorities/favorities.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/favorities/favorities.tsx b/project/src/components/favorities/favorities.tsx
+--- a/project/src/components/favorities/favorities.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/favorities/favorities.tsx	(date 1646569587813)
+@@ -1,8 +1,8 @@
+-import { CardProps } from '../../types/offer-type';
++import {Apartments} from '../../types/offer-type';
+ import FavoriteCard from '../favoriteCard/favorite-card';
+
+ export type FavoritesCardProps = {
+-  apartments: CardProps;
++  apartments: Apartments;
+ }
+
+ export default function Favorites({ apartments }: FavoritesCardProps) {
+@@ -22,17 +22,12 @@
+                   </div>
+                 </div>
+                 <div className="favorites__places">
+-                  {apartments.map((card) => {
+-                    if (card.isFavorite === true && card.city.name === 'Amsterdam') {
++                  {apartments.map((apartment) => {
++                    if (apartment.isFavorite && apartment.city.name === 'Amsterdam') {
+                       return (
+                         <FavoriteCard
+-                          key={card.id}
+-                          id={card.id}
+-                          previewImage={card.previewImage}
+-                          price={card.price}
+-                          rating={card.rating}
+-                          title={card.title}
+-                          type={card.type}
++                          key={apartment.id}
++                          apartment={apartment}
+                         />
+                       );
+                     }
+@@ -49,17 +44,12 @@
+                   </div>
+                 </div>
+                 <div className="favorites__places">
+-                  {apartments.map((card) => {
+-                    if (card.isFavorite === true && card.city.name === 'Cologne') {
++                  {apartments.map((apartment) => {
++                    if (apartment.isFavorite && apartment.city.name === 'Cologne') {
+                       return (
+                         <FavoriteCard
+-                          key={card.id}
+-                          id={card.id}
+-                          previewImage={card.previewImage}
+-                          price={card.price}
+-                          rating={card.rating}
+-                          title={card.title}
+-                          type={card.type}
++                          key={apartment.id}
++                          apartment={apartment}
+                         />
+                       );
+                     }
+Index: project/src/components/app/app.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/app/app.tsx b/project/src/components/app/app.tsx
+--- a/project/src/components/app/app.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/components/app/app.tsx	(date 1646569497369)
+@@ -1,38 +1,39 @@
+ import React from 'react';
+-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+-import { AppRoute, AuthorizationStatus } from '../../const';
++import {BrowserRouter, Route, Routes} from 'react-router-dom';
++import {AppRoute, AuthorizationStatus} from '../../const';
+ import FavoritiesPage from '../../pages/favorities-page';
+ import LoginPage from '../../pages/login-page';
+ import MainPage from '../../pages/main-page';
+ import NotFoundPage from '../../pages/not-found-page';
+-import ProtertyPage from '../../pages/property-page';
+-import { CardProps } from '../../types/offer-type';
++import PropertyPage from '../../pages/property-page';
++import {Apartments} from '../../types/offer-type';
+ import Layout from '../layout';
+ import PrivateRoute from '../private-route/private-route';
+
+
+ type AppProps = {
+   offersCount: number;
+-  apartments: CardProps;
++  apartments: Apartments;
+ }
+-function App({ offersCount, apartments }: AppProps): JSX.Element {
+-  if (apartments) {
+-    return (
+-      <BrowserRouter>
+-        <Routes>
+-          <Route path={AppRoute.Main} element={<Layout />}>
+-            <Route index element={<MainPage offersCount={offersCount} apartments={apartments} />} />
++
++function App({offersCount, apartments}: AppProps): JSX.Element {
++  return (
++    <BrowserRouter>
++      <Routes>
++        <Route path={AppRoute.Main} element={<Layout/>}>
++          <Route index element={<MainPage offersCount={offersCount} apartments={apartments}/>}/>
+
+-            <Route path={'offer/:id'} element={<ProtertyPage />} />
++          <Route path={'offer/:id'} element={<PropertyPage/>}/>
+
+-            <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
+-            <Route path="*" element={<NotFoundPage />} />
+-          </Route>
+-          <Route path={AppRoute.Login} element={<LoginPage />} />
+-        </Routes>
+-      </BrowserRouter>
+-    );
+-  }
++          <Route path={AppRoute.Favorites}
++                 element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage
++                   apartments={apartments}/></PrivateRoute>}/>
++          <Route path="*" element={<NotFoundPage/>}/>
++        </Route>
++        <Route path={AppRoute.Login} element={<LoginPage/>}/>
++      </Routes>
++    </BrowserRouter>
++  );
+ }
+
+ export default App;
+Index: project/src/types/offer-type.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/types/offer-type.ts b/project/src/types/offer-type.ts
+--- a/project/src/types/offer-type.ts	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/types/offer-type.ts	(date 1646568950593)
+@@ -16,14 +16,14 @@
+   name: string,
+ };
+
+-export type CardProp = {
++export type Apartment = {
+   bedrooms: number,
+   city: City,
+   description: string,
+-  goods: [string],
++  goods: string[],
+   host: Host,
+   id: number,
+-  images: [string],
++  images: string[],
+   isFavorite: boolean,
+   isPremium: boolean,
+   location: Location,
+@@ -35,4 +35,4 @@
+   type: string,
+ };
+
+-export type CardProps = CardProp[];
++export type Apartments = Apartment[];
+Index: project/src/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/index.tsx b/project/src/index.tsx
+--- a/project/src/index.tsx	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/index.tsx	(date 1646569450123)
+@@ -3,12 +3,10 @@
+ import App from './components/app/app';
+ import { apartments } from './mocks/offer';
+
+-
+-const offersCount = 122;
+-const [apartment] = apartments;
++const offersCount = apartments.length;
+
+ ReactDOM.render(
+   <React.StrictMode>
+-    <App offersCount={offersCount} apartments={apartments} apartment={apartment} />
++    <App offersCount={offersCount} apartments={apartments} />
+   </React.StrictMode>,
+   document.getElementById('root'));
+Index: project/src/mocks/offer.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/mocks/offer.ts b/project/src/mocks/offer.ts
+--- a/project/src/mocks/offer.ts	(revision e92fb9bfdd81c94c2e77184508890f928142ced2)
++++ b/project/src/mocks/offer.ts	(date 1646569562635)
+@@ -1,6 +1,6 @@
+-import { CardProps } from '../types/offer-type';
++import {Apartments} from '../types/offer-type';
+
+-export const apartments: CardProps = [
++export const apartments: Apartments = [
+   {
+     'bedrooms': 3,
+     'city': {
