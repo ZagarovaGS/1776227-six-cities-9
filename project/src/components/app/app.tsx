@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import ApartmentCardPage from '../../pages/apartment-card-page';
 import FavoritiesPage from '../../pages/favorities-page';
 import LoginPage from '../../pages/login-page';
 import MainPage from '../../pages/main-page';
@@ -33,7 +32,7 @@ function App({ offersCount, apartments }: AppProps): JSX.Element {
         </Routes>
       </BrowserRouter>
     );
-  };
+  }
 }
 
 export default App;

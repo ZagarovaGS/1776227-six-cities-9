@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CardProp, CardProps } from '../../types/offer-type';
+import { CardProps } from '../../types/offer-type';
 import ApartmentCard from '../apartment-card/apartment-card';
 
 export type MainProps = {
@@ -8,13 +8,13 @@ export type MainProps = {
 }
 
 function Main({ apartments, offersCount }: MainProps): JSX.Element {
-  let [activeApartment, setActiveApartment] = useState<CardProps | null>(null);
+  const [activeApartment, setActiveApartment] = useState<CardProps | null>(null);
   const activeCardHandler = (id: number) => {
     setActiveApartment([
-      ...apartments.slice(id - 1, 1)
-    ])
-  }
-  console.log(activeApartment)
+      ...apartments.slice(id - 1, 1),
+    ]);
+  };
+  console.log(activeApartment);
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
