@@ -1,16 +1,20 @@
-import React from 'react';
-import { CardProp } from '../../types/offer-type';
+import React, { useState } from 'react';
+import { Apartment, Apartments } from '../../types/offer-type';
 import ApartmentCard from '../apartment-card/apartment-card';
-
-type CardProps = CardProp[];
 
 export type MainProps = {
   offersCount: number;
-  apartments: CardProps;
+  apartments: Apartments;
 }
 
 
 function Main({ apartments, offersCount }: MainProps): JSX.Element {
+  const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
+  const activeCardHandler = (apartment: Apartment | null) => {
+    setActiveApartment(apartment);
+  };
+
+  //console.log(activeApartment);
 
   return (
     <div className="page page--gray page--main">
@@ -73,15 +77,11 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {apartments.map((card) => (
+                {apartments.map((apartment) => (
                   <ApartmentCard
-                    id={card.id}
-                    key={card.id}
-                    previewImage={card.previewImage}
-                    price={card.price}
-                    rating={card.rating}
-                    title={card.title}
-                    type={card.type}
+                    key={apartment.id}
+                    apartment={apartment}
+                    activeCardHandler={activeCardHandler}
                   />
                 ),
                 )};

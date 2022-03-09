@@ -1,15 +1,27 @@
-import { CardProp } from '../../types/offer-type';
+import { Link } from 'react-router-dom';
+import { Apartment } from '../../types/offer-type';
 
-export default function ApartmentCard({ id, previewImage, price, rating, title, type }: CardProp): JSX.Element {
+type ApartmentCardProps = {
+  apartment: Apartment;
+  activeCardHandler: (apartment: Apartment | null) => void;
+}
+
+export default function ApartmentCard({ apartment, activeCardHandler }: ApartmentCardProps): JSX.Element {
+  const { id, previewImage, price, rating, title, type } = apartment;
   return (
-    <article className="cities__place-card place-card">
+    <article className="cities__place-card place-card" onMouseEnter={() => {
+      activeCardHandler(apartment);
+    }} onMouseLeave={() => {
+      activeCardHandler(null);
+    }}
+    >
       <div className="place-card__mark">
         <span>Premium</span>
       </div>
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${id}`}>
           <img className="place-card__image" src={previewImage} width="260" height="200" alt="Place image" />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -31,7 +43,7 @@ export default function ApartmentCard({ id, previewImage, price, rating, title, 
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">Beautiful &amp; {title}</a>
+          <Link to={`/offer/${id}`}>Beautiful &amp; {title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

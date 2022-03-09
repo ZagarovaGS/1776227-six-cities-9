@@ -1,11 +1,12 @@
-import { CardProps } from '../../types/offer-type';
-import FavoriteCard from '../favoriteCard/favorite-card';
+import { Apartments } from '../../types/offer-type';
+import FavoriteCard from '../favorite-card/favorite-card';
 
 export type FavoritesCardProps = {
-  apartments: CardProps;
+  apartments: Apartments;
 }
 
 export default function Favorites({ apartments }: FavoritesCardProps) {
+
   return (
     <div className="page">
       <main className="page__main page__main--favorites">
@@ -22,17 +23,12 @@ export default function Favorites({ apartments }: FavoritesCardProps) {
                   </div>
                 </div>
                 <div className="favorites__places">
-                  {apartments.map((card) => {
-                    if (card.isFavorite === true && card.city.name === 'Amsterdam') {
+                  {apartments.map((apartment) => {
+                    if (apartment.isFavorite && apartment.city.name === 'Amsterdam') {
                       return (
                         <FavoriteCard
-                          key={card.id}
-                          id={card.id}
-                          previewImage={card.previewImage}
-                          price={card.price}
-                          rating={card.rating}
-                          title={card.title}
-                          type={card.type}
+                          key={apartment.id}
+                          apartment={apartment}
                         />
                       );
                     }
@@ -49,17 +45,12 @@ export default function Favorites({ apartments }: FavoritesCardProps) {
                   </div>
                 </div>
                 <div className="favorites__places">
-                  {apartments.map((card) => {
-                    if (card.isFavorite === true && card.city.name === 'Cologne') {
+                  {apartments.map((apartment) => {
+                    if (apartment.isFavorite && apartment.city.name === 'Cologne') {
                       return (
                         <FavoriteCard
-                          key={card.id}
-                          id={card.id}
-                          previewImage={card.previewImage}
-                          price={card.price}
-                          rating={card.rating}
-                          title={card.title}
-                          type={card.type}
+                          key={apartment.id}
+                          apartment={apartment}
                         />
                       );
                     }
