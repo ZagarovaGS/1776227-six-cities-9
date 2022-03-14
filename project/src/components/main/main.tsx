@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { Apartment, Apartments } from '../../types/offer-type';
-import ApartmentCard from '../apartment-card/apartment-card';
+import { Apartment, Apartments, City } from '../../types/offer-type';
+import ApartmentList from '../apartment-list';
+import Map from '../map';
 
 export type MainProps = {
   offersCount: number;
   apartments: Apartments;
+  city: City;
 }
 
 
-function Main({ apartments, offersCount }: MainProps): JSX.Element {
+function Main({ apartments, offersCount, city }: MainProps): JSX.Element {
   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
   const activeCardHandler = (apartment: Apartment | null) => {
     setActiveApartment(apartment);
@@ -76,19 +78,10 @@ function Main({ apartments, offersCount }: MainProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                {apartments.map((apartment) => (
-                  <ApartmentCard
-                    key={apartment.id}
-                    apartment={apartment}
-                    activeCardHandler={activeCardHandler}
-                  />
-                ),
-                )};
-              </div>
+              <ApartmentList apartments={apartments} activeCardHandler={activeCardHandler} />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map"><Map city={city} apartments={apartments} /></section>
             </div>
           </div>
         </div>
