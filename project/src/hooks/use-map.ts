@@ -1,22 +1,18 @@
-import { City } from './../types/offer-type';
-import { useEffect, useState } from 'react';
+import { City } from '../types/offer-type';
+import { useEffect, useState, MutableRefObject } from 'react';
 import leaflet from 'leaflet';
 
-type useMapProps = {
-  city: City;
-  mapRef: HTMLDivElement;
-}
-function useMap({ mapRef, city }: useMapProps) {
-  const [map, setMap] = useState(null);
+function useMap(mapRef: MutableRefObject<HTMLDivElement | null>, city: City) {
+  const [map, setMap] = useState<leaflet.Map | null>(null);
 
   useEffect(() => {
     if (mapRef.current !== null && map === null) {
       const instance = leaflet.map(mapRef.current, {
         center: {
-          lat: city.latitude,
-          lng: city.longitude,
+          lat: city.location.latitude,
+          lng: city.location.longitude,
         },
-        zoom: city.zoom,
+        zoom: city.location.zoom,
       });
 
       leaflet

@@ -7,12 +7,16 @@ export default function CommentForm() {
     date: '',
     review: '',
   });
+
   const textareaHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setComment({ ...comment, [name]: value });
   };
 
-  //console.log(comment);
+  const commentSubmit = (event) => {
+    event.preventDefault();
+  };
+
   return (
 
     <form className="reviews__form form" action="#" method="post">
@@ -59,7 +63,7 @@ export default function CommentForm() {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={false}>Submit
+        <button className="reviews__submit form__submit button" type="submit" disabled={false} onClick={commentSubmit}>Submit
         </button>
       </div>
     </form>

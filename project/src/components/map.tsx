@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Apartments, City } from '../types/offer-type';
-import useMap from '../hooks/useMap';
+import useMap from '../hooks/use-map';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../const';
 
 type MapProps = {
@@ -10,7 +10,7 @@ type MapProps = {
   apartments: Apartments;
 }
 
-export default function Map({ city, apartments }: MapProps) {
+export default function Map({ city, apartments }: MapProps): JSX.Element {
 
   const mapRef = useRef<HTMLDivElement | null>(null);
   const map = useMap(mapRef, city);
@@ -43,10 +43,6 @@ export default function Map({ city, apartments }: MapProps) {
   }, [map, apartments]);
 
   return (
-    <div
-      style={{ height: '500px' }}
-      ref={mapRef}
-    >
-    </div>
+    <section className="cities__map map" ref={mapRef} ></section>
   );
 }

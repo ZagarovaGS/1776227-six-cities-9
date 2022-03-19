@@ -81,7 +81,7 @@ function Main({ apartments, offersCount, city }: MainProps): JSX.Element {
               <ApartmentList apartments={apartments} activeCardHandler={activeCardHandler} />
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"><Map city={city} apartments={apartments} /></section>
+              <Map city={city} apartments={apartments} />
             </div>
           </div>
         </div>
