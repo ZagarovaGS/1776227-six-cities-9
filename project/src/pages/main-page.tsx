@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import Main from '../components/main/main';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { cityNames, DEFAULT_CITY } from '../mocks/city';
 import { changeCity } from '../store/action';
 import { CityName } from '../types/city-name';
@@ -17,10 +17,12 @@ const checkCity = (cityNames: CityName[], city: string | null) => cityNames.incl
 export default function MainPage({ offersCount, apartments, city }: MainPageProps): JSX.Element {
   const [searchParams] = useSearchParams();
   const selectedCity = searchParams.get('city');
+  //const apartments = useAppSelector((state) => state.apartments);
   const dispatch = useAppDispatch();
+  dispatch(changeCity());
   const filterApartments: Apartments = apartments.filter((item) => item.city.name === selectedCity)!;
   const currentActiveCity = checkCity(cityNames, selectedCity) ? selectedCity : DEFAULT_CITY;
-  // dispatch(changeCity());
+
 
   return (
 
