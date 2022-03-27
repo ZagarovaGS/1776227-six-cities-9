@@ -5,6 +5,7 @@ import { createReducer } from '@reduxjs/toolkit';
 type initionalStateType = {
   apartments: Apartments;
   city: City;
+  offersCount: number;
 };
 
 const initialState: initionalStateType = {
@@ -17,13 +18,15 @@ const initialState: initionalStateType = {
     'name': 'Amsterdam',
   },
   apartments: [],
+  offersCount: 0,
 };
 
 const reducer = createReducer(initialState, (builder) => {
   builder
     .addCase(changeCity, (state) => {
-      state.city = initialState.city;
-    })
+      state.city.name = initialState.city.name;
+      state.offersCount = initialState.apartments.length;
+    });
 });
 
 export { reducer };

@@ -1,6 +1,8 @@
 import { CityName } from './../types/city-name';
 import { City } from './../types/offer-type';
 
+export const DEFAULT_CITY = 'Amsterdam';
+
 export const CITY: City = {
   'location': {
     'latitude': 52.380216,
@@ -65,4 +67,4 @@ export const citiesMapAparments = {
     'longitude': 6.776314,
     'zoom': 13,
   },
-}
+};

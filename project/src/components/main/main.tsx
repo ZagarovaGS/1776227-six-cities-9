@@ -2,30 +2,29 @@ import React, { useState } from 'react';
 import { Apartment, Apartments, City } from '../../types/offer-type';
 import ApartmentList from '../apartment-list';
 import Map from '../map';
-import { useAppDispatch } from '../../hooks';
-import Cities from '../cityList';
+import CityList from '../cityList';
+import { CityName } from '../../types/city-name';
 
 export type MainProps = {
   offersCount: number;
   apartments: Apartments;
   city: City;
+  activeCity: CityName;
 }
 
 
-function Main({ apartments, offersCount, city }: MainProps): JSX.Element {
+function Main({ apartments, offersCount, city, activeCity }: MainProps): JSX.Element {
   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
   const activeCardHandler = (apartment: Apartment | null) => {
     setActiveApartment(apartment);
   };
-
-  const dispatch = useAppDispatch();
 
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <Cities />
+          <CityList activeCity={activeCity} />
         </div>
         <div className="cities">
           <div className="cities__places-container container">

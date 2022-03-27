@@ -16,7 +16,7 @@ type CitiesPropsType = {
   activeCity: CityName,
 }
 
-function Cities({ activeCity }: CitiesPropsType) {
+function CityList({ activeCity }: CitiesPropsType) {
 
   return (
     <section className="locations container">
@@ -33,4 +33,4 @@ function Cities({ activeCity }: CitiesPropsType) {
   );
 }
 
-export default Cities;
+export default CityList;
