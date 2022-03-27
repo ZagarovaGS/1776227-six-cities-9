@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Apartment, Apartments, City } from '../../types/offer-type';
 import ApartmentList from '../apartment-list';
 import Map from '../map';
+import { useAppDispatch } from '../../hooks';
+import Cities from '../cityList';
 
 export type MainProps = {
   offersCount: number;
@@ -16,47 +18,14 @@ function Main({ apartments, offersCount, city }: MainProps): JSX.Element {
     setActiveApartment(apartment);
   };
 
-  //console.log(activeApartment);
+  const dispatch = useAppDispatch();
 
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
+          <Cities />
         </div>
         <div className="cities">
           <div className="cities__places-container container">
@@ -80,9 +49,9 @@ function Main({ apartments, offersCount, city }: MainProps): JSX.Element {
               </form>
               <ApartmentList apartments={apartments} activeCardHandler={activeCardHandler} />
             </section>
-            <div className="cities__right-section">
-              <Map city={city} apartments={apartments} />
-            </div>
+
+            <Map city={city} apartments={apartments} mapClassName='cities__right-section' />
+
           </div>
         </div>
       </main>

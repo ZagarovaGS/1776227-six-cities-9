@@ -145,9 +145,9 @@ export default function Property({ apartment, reviews, apartments, city }: Prope
               </section>
             </div>
           </div>
-          <section className="property__map map" >
-            <Map apartments={apartments} city={city} />
-          </section>
+
+          <Map apartments={apartments} city={city} mapClassName='property__map' />
+
         </section>
         <div className="container">
           <section className="near-places places">

@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom';
+import { apartments } from '../mocks/offer';
 import { Apartment, Apartments } from '../types/offer-type';
 import ApartmentCard from './apartment-card/apartment-card';
 
@@ -6,6 +8,7 @@ type ApartmentListProps = {
   apartments: Apartments;
   activeCardHandler: (apartment: Apartment | null) => void;
 }
+
 
 export default function ApartmentList({ apartments, activeCardHandler }: ApartmentListProps) {
   return (

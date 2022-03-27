@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import classNames from 'classnames';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Apartments, City } from '../types/offer-type';
@@ -8,9 +9,22 @@ import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../const';
 type MapProps = {
   city: City;
   apartments: Apartments;
+  mapClassName?: string;
 }
 
-export default function Map({ city, apartments }: MapProps): JSX.Element {
+function getMapClassName(mapClassName: string | undefined): string {
+  if (mapClassName) {
+    return classNames({
+      'map': true,
+      [mapClassName]: true,
+    });
+  } else {
+    return 'map';
+  }
+}
+
+
+export default function Map({ city, apartments, mapClassName }: MapProps): JSX.Element {
 
   const mapRef = useRef<HTMLDivElement | null>(null);
   const map = useMap(mapRef, city);
@@ -43,6 +57,6 @@ export default function Map({ city, apartments }: MapProps): JSX.Element {
   }, [map, apartments]);
 
   return (
-    <section className="cities__map map" ref={mapRef} ></section>
+    <section className={getMapClassName(mapClassName)} ref={mapRef} />
   );
 }
