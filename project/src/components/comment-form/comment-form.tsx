@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, useState, UIEvent } from 'react';
 
 export default function CommentForm() {
 
@@ -13,7 +13,7 @@ export default function CommentForm() {
     setComment({ ...comment, [name]: value });
   };
 
-  const commentSubmit = (event) => {
+  const commentSubmit = (event: UIEvent) => {
     event.preventDefault();
   };
 

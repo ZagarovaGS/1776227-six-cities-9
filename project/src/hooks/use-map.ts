@@ -26,6 +26,9 @@ function useMap(mapRef: MutableRefObject<HTMLDivElement | null>, city: City) {
 
       setMap(instance);
     }
+    else {
+      map?.setView({ lat: city.location.latitude, lng: city.location.longitude });
+    }
   }, [mapRef, map, city]);
 
   return map;

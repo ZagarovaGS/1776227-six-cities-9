@@ -1,5 +1,5 @@
 import { Reviews } from '../../types/comment-types';
-import { Apartment, Apartments, City } from '../../types/offer-type';
+import { Apartment, Apartments } from '../../types/offer-type';
 import CommentForm from '../comment-form/comment-form';
 import NearPlacesList from '../near-places-list';
 import ReviewsList from '../reviews-list';
@@ -9,9 +9,8 @@ export type PropertyProps = {
   apartment: Apartment;
   apartments: Apartments;
   reviews: Reviews[];
-  city: City;
 }
-export default function Property({ apartment, reviews, apartments, city }: PropertyProps) {
+export default function Property({ apartment, reviews, apartments }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
   return (
     <div className="page">
@@ -146,7 +145,7 @@ export default function Property({ apartment, reviews, apartments, city }: Prope
             </div>
           </div>
 
-          <Map apartments={apartments} city={city} mapClassName='property__map' />
+          <Map apartments={apartments} city={apartment.city} mapClassName='property__map' />
 
         </section>
         <div className="container">

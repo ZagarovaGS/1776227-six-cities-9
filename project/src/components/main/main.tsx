@@ -1,36 +1,32 @@
 import React, { useState } from 'react';
-import { Apartment, Apartments, City } from '../../types/offer-type';
+import { Apartment } from '../../types/offer-type';
 import ApartmentList from '../apartment-list';
 import Map from '../map';
-import CityList from '../cityList';
-import { CityName } from '../../types/city-name';
+import CityList from '../city-list';
+import { useAppSelector } from '../../hooks';
 
-export type MainProps = {
-  offersCount: number;
-  apartments: Apartments;
-  city: City;
-  activeCity: CityName;
-}
-
-
-function Main({ apartments, offersCount, city, activeCity }: MainProps): JSX.Element {
+function Main(): JSX.Element {
   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
   const activeCardHandler = (apartment: Apartment | null) => {
     setActiveApartment(apartment);
   };
+
+  const city = useAppSelector((state) => state.city);
+  const currentApartments = useAppSelector((state) => state.currentApartments);
+
 
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <CityList activeCity={activeCity} />
+          <CityList />
         </div>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
+              <b className="places__found">{currentApartments.length} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -46,10 +42,10 @@ function Main({ apartments, offersCount, city, activeCity }: MainProps): JSX.Ele
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <ApartmentList apartments={apartments} activeCardHandler={activeCardHandler} />
+              <ApartmentList apartments={currentApartments} activeCardHandler={activeCardHandler} />
             </section>
 
-            <Map city={city} apartments={apartments} mapClassName='cities__right-section' />
+            <Map city={city} apartments={currentApartments} mapClassName='cities__right-section' />
 
           </div>
         </div>
@@ -57,4 +53,5 @@ function Main({ apartments, offersCount, city, activeCity }: MainProps): JSX.Ele
     </div>
   );
 }
+
 export default Main;

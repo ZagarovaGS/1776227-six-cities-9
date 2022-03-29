@@ -1,0 +1,671 @@
+Index: project/src/store/reducer.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/store/reducer.ts b/project/src/store/reducer.ts
+--- a/project/src/store/reducer.ts	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/store/reducer.ts	(date 1648486191379)
+@@ -1,32 +1,32 @@
+-import { Apartments, City } from './../types/offer-type';
+-import { changeCity } from './action';
+-import { createReducer } from '@reduxjs/toolkit';
++import {Apartments, City} from './../types/offer-type';
++import {changeCity, loadApartments} from './action';
++import {createReducer} from '@reduxjs/toolkit';
++import {Cities} from "../mocks/city";
+
+ type initionalStateType = {
+   apartments: Apartments;
++  currentApartments: Apartments;
+   city: City;
+-  offersCount: number;
+ };
+
+ const initialState: initionalStateType = {
+-  city: {
+-    'location': {
+-      'latitude': 52.380216,
+-      'longitude': 4.895168,
+-      'zoom': 10,
+-    },
+-    'name': 'Amsterdam',
+-  },
++  city: Cities.Amsterdam,
+   apartments: [],
+-  offersCount: 0,
++  currentApartments: [],
+ };
+
+ const reducer = createReducer(initialState, (builder) => {
+   builder
+-    .addCase(changeCity, (state) => {
+-      state.city.name = initialState.city.name;
+-      state.offersCount = initialState.apartments.length;
++    .addCase(loadApartments, (state, action) => {
++      state.apartments = action.payload;
++      state.currentApartments = state.apartments.filter((apartment) => apartment.city.name === state.city.name)
++    })
++    .addCase(changeCity, (state, action) => {
++      state.city = Cities[action.payload];
++      state.currentApartments = state.apartments.filter((apartment) => apartment.city.name === state.city.name)
++      // state.city.name = initialState.city.name;
++      // state.offersCount = initialState.apartments.length;
+     });
+ });
+
+-export { reducer };
++export {reducer};
+Index: project/src/store/action.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/store/action.ts b/project/src/store/action.ts
+--- a/project/src/store/action.ts	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/store/action.ts	(date 1648486092908)
+@@ -1,4 +1,6 @@
+ import { createAction } from '@reduxjs/toolkit';
+-export const changeCity = createAction('main/apartmets');
++import {Apartments} from "../types/offer-type";
++export const loadApartments = createAction<Apartments>('main/loadApartments');
++export const changeCity = createAction<string>('main/changeCity');
+
+
+Index: project/src/components/cityList.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/cityList.tsx b/project/src/components/cityList.tsx
+--- a/project/src/components/cityList.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/cityList.tsx	(date 1648484913020)
+@@ -1,31 +1,30 @@
+-import { Link } from 'react-router-dom';
+ import classNames from 'classnames';
+-import { CityName } from '../types/city-name';
+-import { cityNames } from '../mocks/city';
++import {cityNames} from '../mocks/city';
++import {useAppDispatch, useAppSelector} from "../hooks";
++import {City} from "../types/offer-type";
++import {changeCity} from "../store/action";
+
+
+-function getLinkClassName(city: string, activeCity: string | null): string {
++function getLinkClassName(city: string, activeCity: City): string {
+   return classNames({
+     'locations__item-link': true,
+     'tabs__item': true,
+-    'tabs__item--active': city === activeCity,
++    'tabs__item--active': city === activeCity.name,
+   });
+ }
+
+-type CitiesPropsType = {
+-  activeCity: CityName,
+-}
+-
+-function CityList({ activeCity }: CitiesPropsType) {
++function CityList() {
++  const activeCity = useAppSelector((state) => state.city);
++  const dispatch = useAppDispatch();
+
+   return (
+     <section className="locations container">
+       <ul className="locations__list tabs__list">
+         {cityNames.map((city) => (
+           <li className="locations__item" key={city}>
+-            <Link className={getLinkClassName(city, activeCity)} to={`/?city=${city}`}>
++            <a className={getLinkClassName(city, activeCity)} onClick={() => dispatch(changeCity(city))}>
+               <span>{city}</span>
+-            </Link>
++            </a>
+           </li>
+         ))}
+       </ul>
+Index: project/package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/package.json b/project/package.json
+--- a/project/package.json	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/package.json	(date 1648484983909)
+@@ -5,6 +5,7 @@
+   "dependencies": {
+     "@reduxjs/toolkit": "^1.5.0",
+     "axios": "^0.21.1",
++    "classnames": "~2.3.1",
+     "history": "^5.2.0",
+     "leaflet": "^1.7.1",
+     "react": "^17.0.2",
+Index: project/src/components/property/property.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/property/property.tsx b/project/src/components/property/property.tsx
+--- a/project/src/components/property/property.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/property/property.tsx	(date 1648486345248)
+@@ -9,9 +9,8 @@
+   apartment: Apartment;
+   apartments: Apartments;
+   reviews: Reviews[];
+-  city: City;
+ }
+-export default function Property({ apartment, reviews, apartments, city }: PropertyProps) {
++export default function Property({ apartment, reviews, apartments }: PropertyProps) {
+   const { previewImage, price, rating, title } = apartment;
+   return (
+     <div className="page">
+@@ -146,7 +145,7 @@
+             </div>
+           </div>
+
+-          <Map apartments={apartments} city={city} mapClassName='property__map' />
++          <Map apartments={apartments} city={apartment.city} mapClassName='property__map' />
+
+         </section>
+         <div className="container">
+Index: project/package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/package-lock.json b/project/package-lock.json
+--- a/project/package-lock.json	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/package-lock.json	(date 1648484983908)
+@@ -10,6 +10,7 @@
+       "dependencies": {
+         "@reduxjs/toolkit": "^1.5.0",
+         "axios": "^0.21.1",
++        "classnames": "~2.3.1",
+         "history": "^5.2.0",
+         "leaflet": "^1.7.1",
+         "react": "^17.0.2",
+@@ -5652,6 +5653,11 @@
+       "resolved": "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz",
+       "integrity": "sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA=="
+     },
++    "node_modules/classnames": {
++      "version": "2.3.1",
++      "resolved": "https://registry.npmjs.org/classnames/-/classnames-2.3.1.tgz",
++      "integrity": "sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA=="
++    },
+     "node_modules/clean-css": {
+       "version": "5.2.4",
+       "resolved": "https://registry.npmjs.org/clean-css/-/clean-css-5.2.4.tgz",
+@@ -20848,6 +20854,11 @@
+       "resolved": "https://registry.npmjs.org/cjs-module-lexer/-/cjs-module-lexer-1.2.2.tgz",
+       "integrity": "sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA=="
+     },
++    "classnames": {
++      "version": "2.3.1",
++      "resolved": "https://registry.npmjs.org/classnames/-/classnames-2.3.1.tgz",
++      "integrity": "sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA=="
++    },
+     "clean-css": {
+       "version": "5.2.4",
+       "resolved": "https://registry.npmjs.org/clean-css/-/clean-css-5.2.4.tgz",
+Index: project/src/components/comment-form/comment-form.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/comment-form/comment-form.tsx b/project/src/components/comment-form/comment-form.tsx
+--- a/project/src/components/comment-form/comment-form.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/comment-form/comment-form.tsx	(date 1648485114406)
+@@ -1,4 +1,4 @@
+-import { ChangeEvent, FormEvent, useState } from 'react';
++import {ChangeEvent, FormEvent, useState, UIEvent} from 'react';
+
+ export default function CommentForm() {
+
+@@ -9,11 +9,11 @@
+   });
+
+   const textareaHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+-    const { name, value } = event.target;
+-    setComment({ ...comment, [name]: value });
++    const {name, value} = event.target;
++    setComment({...comment, [name]: value});
+   };
+
+-  const commentSubmit = (event) => {
++  const commentSubmit = (event: UIEvent) => {
+     event.preventDefault();
+   };
+
+@@ -22,48 +22,51 @@
+     <form className="reviews__form form" action="#" method="post">
+       <label className="reviews__label form__label" htmlFor="review">Your review</label>
+       <div className="reviews__rating-form form__rating">
+-        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" />
++        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio"/>
+         <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
+           <svg className="form__star-image" width="37" height="33">
+             <use xlinkHref="#icon-star"></use>
+           </svg>
+         </label>
+
+-        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" />
++        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio"/>
+         <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
+           <svg className="form__star-image" width="37" height="33">
+             <use xlinkHref="#icon-star"></use>
+           </svg>
+         </label>
+
+-        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" />
++        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio"/>
+         <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
+           <svg className="form__star-image" width="37" height="33">
+             <use xlinkHref="#icon-star"></use>
+           </svg>
+         </label>
+
+-        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" />
++        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio"/>
+         <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
+           <svg className="form__star-image" width="37" height="33">
+             <use xlinkHref="#icon-star"></use>
+           </svg>
+         </label>
+
+-        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" />
++        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio"/>
+         <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
+           <svg className="form__star-image" width="37" height="33">
+             <use xlinkHref="#icon-star"></use>
+           </svg>
+         </label>
+       </div>
+-      <textarea className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved" onChange={textareaHandler} value={comment.review}></textarea>
++      <textarea className="reviews__textarea form__textarea" id="review" name="review"
++                placeholder="Tell how was your stay, what you like and what can be improved" onChange={textareaHandler}
++                value={comment.review}></textarea>
+       <div className="reviews__button-wrapper">
+         <p className="reviews__help">
+           To submit review please make sure to set <span className="reviews__star">rating</span> and
+           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
+         </p>
+-        <button className="reviews__submit form__submit button" type="submit" disabled={false} onClick={commentSubmit}>Submit
++        <button className="reviews__submit form__submit button" type="submit" disabled={false}
++                onClick={commentSubmit}>Submit
+         </button>
+       </div>
+     </form>
+Index: project/src/pages/property-page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/pages/property-page.tsx b/project/src/pages/property-page.tsx
+--- a/project/src/pages/property-page.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/pages/property-page.tsx	(date 1648486421011)
+@@ -6,15 +6,14 @@
+ type PropertyPageProps = {
+   reviews: Reviews[];
+   apartments: Apartments;
+-  city: City;
+ }
+
+-export default function PropertyPage({ reviews, apartments, city }: PropertyPageProps) {
++export default function PropertyPage({ reviews, apartments }: PropertyPageProps) {
+   const params = useParams();
+   const id = Number(params.id);
+   const apartment = apartments.find((item) => item.id === id)!;
+
+   return (
+-    <Property apartment={apartment} reviews={reviews} apartments={apartments} city={city} />
++    <Property apartment={apartment} reviews={reviews} apartments={apartments}/>
+   );
+ }
+Index: project/src/pages/main-page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/pages/main-page.tsx b/project/src/pages/main-page.tsx
+--- a/project/src/pages/main-page.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/pages/main-page.tsx	(date 1648485761995)
+@@ -1,33 +1,8 @@
+-import { useSearchParams } from 'react-router-dom';
+ import Main from '../components/main/main';
+-import { useAppDispatch, useAppSelector } from '../hooks';
+-import { cityNames, DEFAULT_CITY } from '../mocks/city';
+-import { changeCity } from '../store/action';
+-import { CityName } from '../types/city-name';
+-import { Apartments, City } from '../types/offer-type';
+-
+-type MainPageProps = {
+-  offersCount: number;
+-  apartments: Apartments;
+-  city: City;
+-}
+-
+-const checkCity = (cityNames: CityName[], city: string | null) => cityNames.includes(city as CityName);
+-
+-export default function MainPage({ offersCount, apartments, city }: MainPageProps): JSX.Element {
+-  const [searchParams] = useSearchParams();
+-  const selectedCity = searchParams.get('city');
+-  //const apartments = useAppSelector((state) => state.apartments);
+-  const dispatch = useAppDispatch();
+-  dispatch(changeCity());
+-  const filterApartments: Apartments = apartments.filter((item) => item.city.name === selectedCity)!;
+-  const currentActiveCity = checkCity(cityNames, selectedCity) ? selectedCity : DEFAULT_CITY;
+
+-
++export default function MainPage(): JSX.Element {
+   return (
+-
+-    <Main offersCount={offersCount} apartments={filterApartments} city={city} activeCity={currentActiveCity} />
+-
++    <Main />
+   );
+ }
+
+Index: project/src/components/map.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/map.tsx b/project/src/components/map.tsx
+--- a/project/src/components/map.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/map.tsx	(date 1648485992202)
+@@ -1,10 +1,10 @@
+-import React, { useEffect, useRef } from 'react';
++import React, {useEffect, useRef} from 'react';
+ import classNames from 'classnames';
+ import leaflet from 'leaflet';
+ import 'leaflet/dist/leaflet.css';
+-import { Apartments, City } from '../types/offer-type';
++import {Apartments, City} from '../types/offer-type';
+ import useMap from '../hooks/use-map';
+-import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../const';
++import {URL_MARKER_CURRENT, URL_MARKER_DEFAULT} from '../const';
+
+ type MapProps = {
+   city: City;
+@@ -24,7 +24,7 @@
+ }
+
+
+-export default function Map({ city, apartments, mapClassName }: MapProps): JSX.Element {
++export default function Map({city, apartments, mapClassName}: MapProps): JSX.Element {
+
+   const mapRef = useRef<HTMLDivElement | null>(null);
+   const map = useMap(mapRef, city);
+@@ -43,8 +43,8 @@
+
+   useEffect(() => {
+     if (map) {
+-      apartments.forEach((apartment) => {
+-        leaflet
++      const markers = apartments.map((apartment) => {
++        return leaflet
+           .marker({
+             lat: apartment.location.latitude,
+             lng: apartment.location.longitude,
+@@ -53,10 +53,15 @@
+           })
+           .addTo(map);
+       });
++      return () => {
++        markers.forEach((marker) => {
++          marker.removeFrom(map);
++        });
++      }
+     }
+   }, [map, apartments]);
+
+   return (
+-    <section className={getMapClassName(mapClassName)} ref={mapRef} />
++    <section className={getMapClassName(mapClassName)} ref={mapRef}/>
+   );
+ }
+Index: project/src/mocks/city.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/mocks/city.ts b/project/src/mocks/city.ts
+--- a/project/src/mocks/city.ts	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/mocks/city.ts	(date 1648486498270)
+@@ -1,5 +1,5 @@
+-import { CityName } from './../types/city-name';
+-import { City } from './../types/offer-type';
++import {CityName} from '../types/city-name';
++import {City} from '../types/offer-type';
+
+ export const DEFAULT_CITY = 'Amsterdam';
+
+@@ -21,14 +21,29 @@
+   'Dusseldorf',
+ ];
+
+-export const citiesObj = {
+-  'Paris': {},
+-  'Cologne': {},
+-  'Brussels': {},
+-  'Amsterdam': {},
+-  'Hamburg': {},
+-  'Dusseldorf': {},
++export const Cities: Record<string, City> = {
++  // 'Paris': {},
++  // 'Cologne': {},
++  'Brussels': {
++    'name': 'Brussels',
++    location: {
++      'latitude': 50.846557,
++      'longitude': 4.351697,
++      'zoom': 13,
++    }
++  },
++  'Amsterdam': {
++    name: 'Amsterdam',
++    'location': {
++      'latitude': 52.380216,
++      'longitude': 4.895168,
++      'zoom': 10,
++    },
++  },
++  // 'Hamburg': {},
++  // 'Dusseldorf': {},
+ };
++/*
+
+ export const citiesMapAparments = {
+   'Paris': {
+@@ -68,3 +83,4 @@
+     'zoom': 13,
+   },
+ };
++*/
+Index: project/src/hooks/use-map.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/hooks/use-map.ts b/project/src/hooks/use-map.ts
+--- a/project/src/hooks/use-map.ts	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/hooks/use-map.ts	(date 1648485889500)
+@@ -26,6 +26,9 @@
+
+       setMap(instance);
+     }
++    else{
++      map?.setView({lat:city.location.latitude,lng:city.location.longitude});
++    }
+   }, [mapRef, map, city]);
+
+   return map;
+Index: project/src/components/main/main.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/main/main.tsx b/project/src/components/main/main.tsx
+--- a/project/src/components/main/main.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/main/main.tsx	(date 1648485698397)
+@@ -1,36 +1,32 @@
+-import React, { useState } from 'react';
+-import { Apartment, Apartments, City } from '../../types/offer-type';
++import React, {useState} from 'react';
++import {Apartment, Apartments, City} from '../../types/offer-type';
+ import ApartmentList from '../apartment-list';
+ import Map from '../map';
+ import CityList from '../cityList';
+-import { CityName } from '../../types/city-name';
+-
+-export type MainProps = {
+-  offersCount: number;
+-  apartments: Apartments;
+-  city: City;
+-  activeCity: CityName;
+-}
++import {useAppSelector} from "../../hooks";
+
+-
+-function Main({ apartments, offersCount, city, activeCity }: MainProps): JSX.Element {
++function Main(): JSX.Element {
+   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
+   const activeCardHandler = (apartment: Apartment | null) => {
+     setActiveApartment(apartment);
+   };
+
++  const city = useAppSelector((state) => state.city);
++  const currentApartments = useAppSelector((state) => state.currentApartments);
++
++
+   return (
+     <div className="page page--gray page--main">
+       <main className="page__main page__main--index">
+         <h1 className="visually-hidden">Cities</h1>
+         <div className="tabs">
+-          <CityList activeCity={activeCity} />
++          <CityList/>
+         </div>
+         <div className="cities">
+           <div className="cities__places-container container">
+             <section className="cities__places places">
+               <h2 className="visually-hidden">Places</h2>
+-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
++              <b className="places__found">{currentApartments.length} places to stay in Amsterdam</b>
+               <form className="places__sorting" action="#" method="get">
+                 <span className="places__sorting-caption">Sort by</span>
+                 <span className="places__sorting-type" tabIndex={0}>
+@@ -46,10 +42,10 @@
+                   <li className="places__option" tabIndex={0}>Top rated first</li>
+                 </ul>
+               </form>
+-              <ApartmentList apartments={apartments} activeCardHandler={activeCardHandler} />
++              <ApartmentList apartments={currentApartments} activeCardHandler={activeCardHandler}/>
+             </section>
+
+-            <Map city={city} apartments={apartments} mapClassName='cities__right-section' />
++            <Map city={city} apartments={currentApartments} mapClassName='cities__right-section'/>
+
+           </div>
+         </div>
+@@ -57,4 +53,5 @@
+     </div>
+   );
+ }
++
+ export default Main;
+Index: project/src/components/app/app.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/components/app/app.tsx b/project/src/components/app/app.tsx
+--- a/project/src/components/app/app.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/components/app/app.tsx	(date 1648486372204)
+@@ -1,35 +1,37 @@
+ import React from 'react';
+-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+-import { AppRoute, AuthorizationStatus } from '../../const';
++import {BrowserRouter, Route, Routes} from 'react-router-dom';
++import {AppRoute, AuthorizationStatus} from '../../const';
+ import FavoritiesPage from '../../pages/favorities-page';
+ import LoginPage from '../../pages/login-page';
+ import MainPage from '../../pages/main-page';
+ import NotFoundPage from '../../pages/not-found-page';
+ import PropertyPage from '../../pages/property-page';
+-import { Reviews } from '../../types/comment-types';
+-import { Apartments, City } from '../../types/offer-type';
++import {Reviews} from '../../types/comment-types';
++import {Apartments, City} from '../../types/offer-type';
+ import Layout from '../layout';
+ import PrivateRoute from '../private-route/private-route';
++import {useAppSelector} from "../../hooks";
+
+
+ type AppProps = {
+-  offersCount: number;
+-  apartments: Apartments;
+-  city: City;
+   reviews: Reviews[];
+ }
+
+-function App({ offersCount, apartments, city, reviews }: AppProps): JSX.Element {
++function App({reviews}: AppProps): JSX.Element {
++  const apartments = useAppSelector((state) => state.apartments);
++
+   return (
+     <BrowserRouter>
+       <Routes>
+-        <Route path={AppRoute.Main} element={<Layout />}>
+-          <Route index element={<MainPage offersCount={offersCount} apartments={apartments} city={city} />} />
+-          <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
+-          <Route path={'offer/:id'} element={<PropertyPage reviews={reviews} apartments={apartments} city={city} />} />
+-          <Route path="*" element={<NotFoundPage />} />
++        <Route path={AppRoute.Main} element={<Layout/>}>
++          <Route index element={<MainPage/>}/>
++          <Route path={AppRoute.Favorites}
++                 element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage
++                   apartments={apartments}/></PrivateRoute>}/>
++          <Route path={'offer/:id'} element={<PropertyPage reviews={reviews} apartments={apartments}/>}/>
++          <Route path="*" element={<NotFoundPage/>}/>
+         </Route>
+-        <Route path={AppRoute.Login} element={<LoginPage />} />
++        <Route path={AppRoute.Login} element={<LoginPage/>}/>
+       </Routes>
+     </BrowserRouter>
+   );
+Index: project/src/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/project/src/index.tsx b/project/src/index.tsx
+--- a/project/src/index.tsx	(revision 04944ed968620072a02b08be9b9214c6802b20f9)
++++ b/project/src/index.tsx	(date 1648486258364)
+@@ -1,19 +1,18 @@
+ import React from 'react';
+ import ReactDOM from 'react-dom';
+-import { Provider } from 'react-redux';
++import {Provider} from 'react-redux';
+ import App from './components/app/app';
+-import { CITY } from './mocks/city';
+-import { apartments } from './mocks/offer';
+-import { reviews } from './mocks/reviews';
+-import { store } from './store';
++import {apartments} from './mocks/offer';
++import {reviews} from './mocks/reviews';
++import {store} from './store';
++import {loadApartments} from "./store/action";
+
+-
+-const offersCount = 122;
++store.dispatch(loadApartments(apartments));
+
+ ReactDOM.render(
+   <React.StrictMode>
+     <Provider store={store}>
+-      <App offersCount={offersCount} apartments={apartments} city={CITY} reviews={reviews} />
++      <App reviews={reviews}/>
+     </Provider>
+   </React.StrictMode>,
+   document.getElementById('root'));

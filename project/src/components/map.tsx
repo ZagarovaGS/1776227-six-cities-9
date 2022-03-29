@@ -43,8 +43,8 @@ export default function Map({ city, apartments, mapClassName }: MapProps): JSX.E
 
   useEffect(() => {
     if (map) {
-      apartments.forEach((apartment) => {
-        leaflet
+      const markers = apartments.map((apartment) => {
+        return leaflet
           .marker({
             lat: apartment.location.latitude,
             lng: apartment.location.longitude,
@@ -53,6 +53,11 @@ export default function Map({ city, apartments, mapClassName }: MapProps): JSX.E
           })
           .addTo(map);
       });
+      return () => {
+        markers.forEach((marker) => {
+          marker.removeFrom(map);
+        });
+      }
     }
   }, [map, apartments]);
 

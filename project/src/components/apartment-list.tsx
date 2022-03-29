@@ -1,5 +1,3 @@
-import { useParams } from 'react-router-dom';
-import { apartments } from '../mocks/offer';
 import { Apartment, Apartments } from '../types/offer-type';
 import ApartmentCard from './apartment-card/apartment-card';
 
