@@ -169,7 +169,7 @@ export const apartments: Apartments = [
     ],
     'host': {
       'avatarUrl': 'img/room.jpg',
-      'id': 1,
+      'id': 5,
       'isPro': true,
       'name': 'Angelina',
     },
@@ -207,7 +207,7 @@ export const apartments: Apartments = [
     ],
     'host': {
       'avatarUrl': 'img/apartment-02.jpg',
-      'id': 2,
+      'id': 6,
       'isPro': true,
       'name': 'Roza',
     },
@@ -262,7 +262,7 @@ export const apartments: Apartments = [
     },
     'maxAdults': 5,
     'previewImage': 'img/apartment-03.jpg',
-    'price': 160,
+    'price': 220,
     'rating': 3.8,
     'title': 'Beautiful & luxurious studio at great location',
     'type': 'palace',
@@ -287,7 +287,7 @@ export const apartments: Apartments = [
       'isPro': true,
       'name': 'Angelina',
     },
-    'id': 4,
+    'id': 8,
     'images': [
       'img/room.jpg',
     ],

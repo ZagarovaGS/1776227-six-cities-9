@@ -9,8 +9,9 @@ export type PropertyProps = {
   apartment: Apartment;
   apartments: Apartments;
   reviews: Reviews[];
+  activeApartment: Apartment | null;
 }
-export default function Property({ apartment, reviews, apartments }: PropertyProps) {
+export default function Property({ apartment, reviews, apartments, activeApartment }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
   return (
     <div className="page">
@@ -145,7 +146,7 @@ export default function Property({ apartment, reviews, apartments }: PropertyPro
             </div>
           </div>
 
-          <Map apartments={apartments} city={apartment.city} mapClassName='property__map' />
+          <Map apartments={apartments} city={apartment.city} activeApartment={activeApartment} mapClassName='property__map' />
 
         </section>
         <div className="container">

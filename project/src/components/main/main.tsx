@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Apartment } from '../../types/offer-type';
+import { Apartment, Apartments } from '../../types/offer-type';
 import ApartmentList from '../apartment-list';
 import Map from '../map';
 import CityList from '../city-list';
 import { useAppSelector } from '../../hooks';
+import { apartments } from '../../mocks/offer';
+import SortList from '../sort-list';
+import { SortMethods } from '../../const';
 
 function Main(): JSX.Element {
   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
@@ -13,7 +16,32 @@ function Main(): JSX.Element {
 
   const city = useAppSelector((state) => state.city);
   const currentApartments = useAppSelector((state) => state.currentApartments);
+  const [sortBy, setSortBy] = useState<string>(SortMethods.POPULAR);
 
+  const sortOptionsHandle = (SortOption: string): void => {
+    setSortBy(SortOption);
+  };
+
+  const changeOrderAparments = function (
+    sortMethod: string,
+    currentFilteredApartments: Apartments,
+  ): Apartments {
+    switch (sortMethod) {
+      case SortMethods.PRICE_LOW_TO_HIGH:
+        return currentFilteredApartments.sort((firstItem, lastItem) => firstItem.price - lastItem.price);
+      case SortMethods.PRICE_HIGH_TO_LOW:
+        return currentFilteredApartments.sort((firstItem, lastItem) => lastItem.price - firstItem.price);
+      case SortMethods.TOP_RATED_FIRST:
+        return currentFilteredApartments.sort((firstItem, lastItem) => lastItem.rating - firstItem.rating);
+      case SortMethods.POPULAR:
+      default:
+        return currentFilteredApartments;
+    }
+  };
+  const filteredApartments: Apartments = apartments.filter(
+    (apartment) => apartment.city.name === city.name,
+  );
+  const sortedFilteredApartments = changeOrderAparments(sortBy, filteredApartments);
 
   return (
     <div className="page page--gray page--main">
@@ -27,25 +55,11 @@ function Main(): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{currentApartments.length} places to stay in Amsterdam</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
-                </ul>
-              </form>
-              <ApartmentList apartments={currentApartments} activeCardHandler={activeCardHandler} />
+              <SortList sortOptionsHandle={sortOptionsHandle} />
+              <ApartmentList apartments={sortedFilteredApartments} activeCardHandler={activeCardHandler} />
             </section>
 
-            <Map city={city} apartments={currentApartments} mapClassName='cities__right-section' />
+            <Map city={city} apartments={currentApartments} activeApartment={activeApartment} mapClassName='cities__right-section' />
 
           </div>
         </div>

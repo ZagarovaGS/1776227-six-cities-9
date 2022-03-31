@@ -1,3 +1,4 @@
+//import { apartments } from './../mocks/offer';
 import { Apartments, City } from './../types/offer-type';
 import { changeCity, loadApartments } from './action';
 import { createReducer } from '@reduxjs/toolkit';
@@ -7,12 +8,14 @@ type initionalStateType = {
   apartments: Apartments;
   currentApartments: Apartments;
   city: City;
+  price: number;
 };
 
 const initialState: initionalStateType = {
   city: Cities.Amsterdam,
   apartments: [],
   currentApartments: [],
+  price: 0,
 };
 
 const reducer = createReducer(initialState, (builder) => {

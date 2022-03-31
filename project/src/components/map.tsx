@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Apartments, City } from '../types/offer-type';
+import { Apartment, Apartments, City } from '../types/offer-type';
 import useMap from '../hooks/use-map';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../const';
 
@@ -10,6 +10,7 @@ type MapProps = {
   city: City;
   apartments: Apartments;
   mapClassName?: string;
+  activeApartment: Apartment | null;
 }
 
 function getMapClassName(mapClassName: string | undefined): string {
@@ -24,7 +25,7 @@ function getMapClassName(mapClassName: string | undefined): string {
 }
 
 
-export default function Map({ city, apartments, mapClassName }: MapProps): JSX.Element {
+export default function Map({ city, apartments, mapClassName, activeApartment }: MapProps): JSX.Element {
 
   const mapRef = useRef<HTMLDivElement | null>(null);
   const map = useMap(mapRef, city);
@@ -49,7 +50,7 @@ export default function Map({ city, apartments, mapClassName }: MapProps): JSX.E
             lat: apartment.location.latitude,
             lng: apartment.location.longitude,
           }, {
-            icon: defaultCustomIcon,
+            icon: apartment.id === activeApartment?.id ? currentCustomIcon : defaultCustomIcon,
           })
           .addTo(map);
       });
@@ -57,9 +58,9 @@ export default function Map({ city, apartments, mapClassName }: MapProps): JSX.E
         markers.forEach((marker) => {
           marker.removeFrom(map);
         });
-      }
+      };
     }
-  }, [map, apartments]);
+  }, [map, apartments, activeApartment]);
 
   return (
     <section className={getMapClassName(mapClassName)} ref={mapRef} />
