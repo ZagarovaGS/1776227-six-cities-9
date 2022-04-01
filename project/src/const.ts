@@ -18,7 +18,23 @@ export enum SortMethods {
   TOP_RATED_FIRST = 'Top rated first'
 }
 
+export enum APIRoute {
+  Apartments = '/hotels',
+  Login = '/login',
+  Logout = '/logout',
+  Favorite = '/favorite',
+  Apartment = '/hotels',
+  Comments = '/comments',
+}
+
+export enum HTTP_CODE {
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  NOT_FOUND = 404,
+}
+
 export const URL_MARKER_DEFAULT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
 
 export const URL_MARKER_CURRENT = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
+export const TIMEOUT_SHOW_ERROR = 2000;

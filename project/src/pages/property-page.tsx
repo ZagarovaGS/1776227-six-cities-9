@@ -12,8 +12,9 @@ export default function PropertyPage({ reviews, apartments }: PropertyPageProps)
   const params = useParams();
   const id = Number(params.id);
   const apartment = apartments.find((item) => item.id === id)!;
+  const activeApartment = apartments[id];
 
   return (
-    <Property apartment={apartment} reviews={reviews} apartments={apartments} />
+    <Property apartment={apartment} reviews={reviews} apartments={apartments} activeApartment={activeApartment} />
   );
 }

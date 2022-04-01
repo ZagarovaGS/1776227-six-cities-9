@@ -4,17 +4,18 @@ import ApartmentList from '../apartment-list';
 import Map from '../map';
 import CityList from '../city-list';
 import { useAppSelector } from '../../hooks';
-import { apartments } from '../../mocks/offer';
 import SortList from '../sort-list';
 import { SortMethods } from '../../const';
 
 function Main(): JSX.Element {
+
   const [activeApartment, setActiveApartment] = useState<Apartment | null>(null);
   const activeCardHandler = (apartment: Apartment | null) => {
     setActiveApartment(apartment);
   };
 
   const city = useAppSelector((state) => state.city);
+  const apartments = useAppSelector((state) => state.apartments);
   const currentApartments = useAppSelector((state) => state.currentApartments);
   const [sortBy, setSortBy] = useState<string>(SortMethods.POPULAR);
 

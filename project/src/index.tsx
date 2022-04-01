@@ -2,16 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import App from './components/app/app';
-import { apartments } from './mocks/offer';
+import ErrorMessage from './components/error-message';
 import { reviews } from './mocks/reviews';
 import { store } from './store';
-import { loadApartments } from './store/action';
+import { checkAuthAction, fetchApartmentAction } from './store/api-action';
 
-store.dispatch(loadApartments(apartments));
+store.dispatch(fetchApartmentAction());
+store.dispatch(checkAuthAction());
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
+      <ErrorMessage />
       <App reviews={reviews} />
     </Provider>
   </React.StrictMode>,

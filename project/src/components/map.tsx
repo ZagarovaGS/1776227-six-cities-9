@@ -44,16 +44,16 @@ export default function Map({ city, apartments, mapClassName, activeApartment }:
 
   useEffect(() => {
     if (map) {
-      const markers = apartments.map((apartment) => {
-        return leaflet
+      const markers = apartments.map((apartment) => (
+        leaflet
           .marker({
             lat: apartment.location.latitude,
             lng: apartment.location.longitude,
           }, {
             icon: apartment.id === activeApartment?.id ? currentCustomIcon : defaultCustomIcon,
           })
-          .addTo(map);
-      });
+          .addTo(map)
+      ));
       return () => {
         markers.forEach((marker) => {
           marker.removeFrom(map);

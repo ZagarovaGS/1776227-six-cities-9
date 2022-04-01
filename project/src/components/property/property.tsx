@@ -13,6 +13,7 @@ export type PropertyProps = {
 }
 export default function Property({ apartment, reviews, apartments, activeApartment }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
+
   return (
     <div className="page">
       <main className="page__main page__main--property">

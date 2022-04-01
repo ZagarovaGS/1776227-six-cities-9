@@ -10,15 +10,25 @@ import Layout from '../layout';
 import PrivateRoute from '../private-route/private-route';
 import { useAppSelector } from '../../hooks';
 import Main from '../main/main';
+import LoadingScreen from '../loading-screen';
 
 
 type AppProps = {
   reviews: Reviews[];
 }
+export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
+  authorizationStatus === AuthorizationStatus.Unknown;
 
 function App({ reviews }: AppProps): JSX.Element {
   const apartments = useAppSelector((state) => state.apartments);
 
+  const { authorizationStatus, isDataLoaded } = useAppSelector((state) => state);
+
+  if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
+    return (
+      <LoadingScreen />
+    );
+  }
   return (
     <BrowserRouter>
       <Routes>
