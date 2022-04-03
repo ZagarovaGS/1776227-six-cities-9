@@ -10,7 +10,7 @@ type MapProps = {
   city: City;
   apartments: Apartments;
   mapClassName?: string;
-  activeApartment: Apartment | null;
+  activeApartment?: Apartment | null;
 }
 
 function getMapClassName(mapClassName: string | undefined): string {

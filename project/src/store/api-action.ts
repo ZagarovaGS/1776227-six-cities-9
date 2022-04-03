@@ -1,7 +1,7 @@
 import { UserData } from './../types/user-data';
 import { AuthData } from './../types/auth-data';
 import { saveToken, dropToken } from './../services/token';
-import { loadApartments, requireAuthorization, setError } from './action';
+import { loadApartments, requireAuthorization, setError, setUserData } from './action';
 import { APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR } from './../const';
 import { Apartments } from './../types/offer-type';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -33,8 +33,9 @@ export const checkAuthAction = createAsyncThunk(
   'user/checkAuth',
   async () => {
     try {
-      await api.get(APIRoute.Login);
+      const { data } = await api.get<UserData>(APIRoute.Login);
       store.dispatch(requireAuthorization(AuthorizationStatus.Auth));
+      store.dispatch(setUserData(data));
     } catch (error) {
       errorHandle(error);
       store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
@@ -46,9 +47,11 @@ export const loginAction = createAsyncThunk(
   'user/login',
   async ({ login: email, password }: AuthData) => {
     try {
-      const { data: { token } } = await api.post<UserData>(APIRoute.Login, { email, password });
-      saveToken(token);
+      const { data } = await api.post<UserData>(APIRoute.Login, { email, password });
+      saveToken(data.token);
       store.dispatch(requireAuthorization(AuthorizationStatus.Auth));
+      store.dispatch(setUserData(data));
+      localStorage.setItem('EMAIL', data.email);
     } catch (error) {
       errorHandle(error);
       store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth));

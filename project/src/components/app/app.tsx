@@ -16,7 +16,7 @@ import LoadingScreen from '../loading-screen';
 type AppProps = {
   reviews: Reviews[];
 }
-export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
+export const isUnknownAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
 function App({ reviews }: AppProps): JSX.Element {
@@ -24,7 +24,7 @@ function App({ reviews }: AppProps): JSX.Element {
 
   const { authorizationStatus, isDataLoaded } = useAppSelector((state) => state);
 
-  if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
+  if (isUnknownAuth(authorizationStatus) || !isDataLoaded) {
     return (
       <LoadingScreen />
     );
@@ -34,7 +34,7 @@ function App({ reviews }: AppProps): JSX.Element {
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />}>
           <Route index element={<Main />} />
-          <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={AuthorizationStatus.Auth}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
+          <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={authorizationStatus}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
           <Route path={'offer/:id'} element={<PropertyPage reviews={reviews} apartments={apartments} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
