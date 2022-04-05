@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import FavoritiesPage from '../../pages/favorities-page';
 import LoginPage from '../../pages/login-page';
@@ -11,6 +11,10 @@ import PrivateRoute from '../private-route/private-route';
 import { useAppSelector } from '../../hooks';
 import Main from '../main/main';
 import LoadingScreen from '../loading-screen';
+import { checkAuthAction } from '../../store/api-action';
+import { store } from '../../store';
+import HistoryRouter from '../history-route/history-route';
+import browserHistory from '../../browser-history';
 
 
 type AppProps = {
@@ -20,6 +24,11 @@ export const isUnknownAuth = (authorizationStatus: AuthorizationStatus): boolean
   authorizationStatus === AuthorizationStatus.Unknown;
 
 function App({ reviews }: AppProps): JSX.Element {
+  useEffect(() => {
+    store.dispatch(checkAuthAction());
+  }, []);
+
+
   const apartments = useAppSelector((state) => state.apartments);
 
   const { authorizationStatus, isDataLoaded } = useAppSelector((state) => state);
@@ -30,17 +39,17 @@ function App({ reviews }: AppProps): JSX.Element {
     );
   }
   return (
-    <BrowserRouter>
+    <HistoryRouter history={browserHistory}>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />}>
           <Route index element={<Main />} />
           <Route path={AppRoute.Favorites} element={<PrivateRoute authorizationStatus={authorizationStatus}><FavoritiesPage apartments={apartments} /></PrivateRoute>} />
-          <Route path={'offer/:id'} element={<PropertyPage reviews={reviews} apartments={apartments} />} />
+          <Route path={'offer/:id'} element={<PropertyPage apartments={apartments} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
         <Route path={AppRoute.Login} element={<LoginPage />} />
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 

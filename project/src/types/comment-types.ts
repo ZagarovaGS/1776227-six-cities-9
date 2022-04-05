@@ -1,6 +1,13 @@
 export type Reviews = {
-  id: number,
-  userName: string,
-  date: string,
-  review: string,
+  comment: string
+  date: string
+  id: number
+  rating: number
+  user: {
+    avatarUrl: string
+    id: number
+    isPro: boolean
+    name: string
+  }
 }
+

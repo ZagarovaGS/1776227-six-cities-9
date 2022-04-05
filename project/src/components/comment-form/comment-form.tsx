@@ -1,6 +1,9 @@
 import { ChangeEvent, useState, UIEvent } from 'react';
+import { useAppSelector } from '../../hooks';
 
 export default function CommentForm() {
+
+  const currentComment = useAppSelector((state) => state.userComment);
 
   const [comment, setComment] = useState({
     userName: '',
@@ -10,7 +13,8 @@ export default function CommentForm() {
 
   const textareaHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setComment({ ...comment, [name]: value });
+    setComment({ ...comment, [name]: currentComment?.comment });
+    // setComment({ ...comment, [name]: value });
   };
 
   const commentSubmit = (event: UIEvent) => {

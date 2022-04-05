@@ -1,8 +1,9 @@
+import { Reviews } from './../types/comment-types';
 import { UserData } from './../types/auth-data';
 import { ErrorType } from './../types/error';
 import { AuthorizationStatus } from './../const';
 import { Apartments, City } from './../types/offer-type';
-import { changeCity, loadApartments, requireAuthorization, setError, setUserData } from './action';
+import { changeCity, loadApartments, requireAuthorization, setError, setUserData, setNearby, setReview, loadComment } from './action';
 import { createReducer } from '@reduxjs/toolkit';
 import { Cities } from '../mocks/city';
 
@@ -12,9 +13,12 @@ type initionalStateType = {
   city: City;
   price: number;
   authorizationStatus: AuthorizationStatus;
-  error: ErrorType;
+  error?: ErrorType | null;
   isDataLoaded: boolean;
   userData: UserData | null;
+  nearby: Apartments;
+  comments: Reviews[];
+  userComment: Reviews | null;
 };
 
 const initialState: initionalStateType = {
@@ -25,14 +29,10 @@ const initialState: initionalStateType = {
   authorizationStatus: AuthorizationStatus.Unknown,
   error: '',
   isDataLoaded: false,
-  userData: {
-    avatarUrl: '',
-    email: '',
-    id: 0,
-    isPro: false,
-    name: '',
-    token: '',
-  },
+  userData: null,
+  nearby: [],
+  comments: [],
+  userComment: null,
 };
 
 const reducer = createReducer(initialState, (builder) => {
@@ -54,7 +54,16 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setUserData, (state, action) => {
       state.userData = action.payload;
-    });
+    })
+    .addCase(setNearby, (state, action) => {
+      state.nearby = action.payload;
+    })
+    .addCase(setReview, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(loadComment, (state, action) => {
+      state.userComment = action.payload;
+    })
 });
 
 export { reducer };

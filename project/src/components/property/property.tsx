@@ -1,4 +1,3 @@
-import { Reviews } from '../../types/comment-types';
 import { Apartment, Apartments } from '../../types/offer-type';
 import CommentForm from '../comment-form/comment-form';
 import NearPlacesList from '../near-places-list';
@@ -8,9 +7,8 @@ import Map from '../map';
 export type PropertyProps = {
   apartment: Apartment;
   apartments: Apartments;
-  reviews: Reviews[];
 }
-export default function Property({ apartment, reviews, apartments }: PropertyProps) {
+export default function Property({ apartment, apartments }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
 
   return (
@@ -139,7 +137,7 @@ export default function Property({ apartment, reviews, apartments }: PropertyPro
               <section className="property__reviews reviews">
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
 
-                <ReviewsList reviews={reviews} />
+                <ReviewsList />
 
                 <CommentForm />
               </section>

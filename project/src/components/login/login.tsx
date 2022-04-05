@@ -1,9 +1,8 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { store } from '../../store';
-import { checkAuthAction, loginAction } from '../../store/api-action';
+import { loginAction } from '../../store/api-action';
 import { AuthData } from '../../types/auth-data';
 
 
@@ -14,7 +13,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
-  let [isAuth, setIsAuth] = useState<boolean>(false);
+  let isAuth = false;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,12 +29,8 @@ export default function Login() {
     dispatch(loginAction(authData));
   };
 
-  useEffect(() => {
-    store.dispatch(checkAuthAction());
-  }, []);
-
   if (authorizationStatus === AuthorizationStatus.Auth) {
-    isAuth = true;//почему-то не присваивается через setIsAuth
+    isAuth = true;
   }
 
   return (

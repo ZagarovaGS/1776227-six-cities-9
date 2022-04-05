@@ -6,6 +6,7 @@ type NearPlacesListProps = {
 }
 
 export default function NearPlacesList({ apartments }: NearPlacesListProps) {
+
   return (
     <div className="near-places__list places__list">
       {apartments.map((apartment) => (
