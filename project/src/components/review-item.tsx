@@ -1,13 +1,17 @@
-import { Reviews } from '../types/comment-types';
+import {Reviews} from '../types/comment-types';
 
-export default function ReviewItem(userReview: Reviews) {
-  const { date, comment, rating, avatarUrl, name } = userReview;
+export type  ReviewItemProps = {
+  review: Reviews;
+}
+
+export default function ReviewItem({review}: ReviewItemProps) {
+  const {date, comment, rating, user: {avatarUrl, name}} = review;
 
   return (
     <li className="reviews__item">
       <div className="reviews__user user">
         <div className="reviews__avatar-wrapper user__avatar-wrapper">
-          <img className="reviews__avatar user__avatar" src={avatarUrl} width="54" height="54" alt="Reviews avatar" />
+          <img className="reviews__avatar user__avatar" src={avatarUrl} width="54" height="54" alt="Reviews avatar"/>
         </div>
         <span className="reviews__user-name">
           {name}
@@ -16,7 +20,7 @@ export default function ReviewItem(userReview: Reviews) {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{ width: `${rating * 20}%` }}>{rating}</span>
+            <span style={{width: `${rating * 20}%`}}>{rating}</span>
             <span className="visually-hidden"></span>
           </div>
         </div>

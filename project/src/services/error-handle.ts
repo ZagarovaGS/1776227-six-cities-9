@@ -2,9 +2,9 @@ import { HTTP_CODE } from './../const';
 import { setError } from './../store/action';
 import { store } from './../store/index';
 import request from 'axios';
-import { ErrorType } from './../types/error';
 import { clearErrorAction } from '../store/api-action';
-export const errorHandle = (error: ErrorType): void => {
+
+export const errorHandle = (error: unknown): void => {
   if (!request.isAxiosError(error)) {
     throw error;
   }

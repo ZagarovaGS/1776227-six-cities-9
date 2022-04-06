@@ -1,22 +1,40 @@
 import { Reviews } from './../types/comment-types';
 
 export const reviews: Reviews[] = [{
-  id: 1,
-  userName: 'Nick',
+  comment: 'I was glad to visit this wonderful place',
   date: '03.11.2020',
-  review: 'I was glad to visit this wonderful place',
+  id: 1,
+  rating: 5,
+  user: {
+    avatarUrl: '',
+    id: 1,
+    isPro: false,
+    name: 'Nick',
+  },
 },
 {
-  id: 2,
-  userName: 'Bob',
+  comment: 'This is the best place',
   date: '04.08.2021',
-  review: 'This is the best place',
+  id: 1,
+  rating: 4,
+  user: {
+    avatarUrl: '',
+    id: 2,
+    isPro: false,
+    name: 'Bob',
+  },
 },
 {
-  id: 3,
-  userName: 'Ann',
+  comment: 'I celebrated New Year here. It was good holidays',
   date: '01.01.2022',
-  review: 'I celebrated New Year here. It was good holidays',
+  id: 3,
+  rating: 4,
+  user: {
+    avatarUrl: '',
+    id: 3,
+    isPro: false,
+    name: 'Ann',
+  },
 },
 ];
 

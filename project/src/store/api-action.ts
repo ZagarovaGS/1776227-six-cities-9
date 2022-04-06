@@ -1,10 +1,19 @@
-import { Reviews, UserReview } from './../types/comment-types';
+import { Reviews } from './../types/comment-types';
 import { UserData } from './../types/user-data';
 import { AuthData } from './../types/auth-data';
 import { saveToken, dropToken } from './../services/token';
-import { loadApartments, requireAuthorization, setError, setUserData, redirectToRoute, setNearby, setReview, loadComment } from './action';
+import {
+  loadApartments,
+  requireAuthorization,
+  setError,
+  setUserData,
+  redirectToRoute,
+  setNearby,
+  setReview,
+  setApartment
+} from './action';
 import { APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR, AppRoute } from './../const';
-import { Apartments } from './../types/offer-type';
+import { Apartment, Apartments } from './../types/offer-type';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api, store } from './index';
 import { errorHandle } from '../services/error-handle';
@@ -37,8 +46,7 @@ export const checkAuthAction = createAsyncThunk(
       const { data } = await api.get<UserData>(APIRoute.Login);
       store.dispatch(requireAuthorization(AuthorizationStatus.Auth));
       store.dispatch(setUserData(data));
-    } catch (error) {
-      errorHandle(error);
+    } catch {
       store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
     }
   },
@@ -52,7 +60,7 @@ export const loginAction = createAsyncThunk(
       saveToken(data.token);
       store.dispatch(requireAuthorization(AuthorizationStatus.Auth));
       store.dispatch(setUserData(data));
-      store.dispatch(redirectToRoute(AppRoute.Login));
+      store.dispatch(redirectToRoute(AppRoute.Main));
     } catch (error) {
       errorHandle(error);
       store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
@@ -72,8 +80,21 @@ export const logoutAction = createAsyncThunk(
     }
   },
 );
+
+export const fetchApartment = createAsyncThunk(
+  'property/fetchApartment',
+  async (id: number) => {
+    try {
+      const { data } = await api.get<Apartment>(`${APIRoute.Apartments}/${id}`);
+      store.dispatch(setApartment(data));
+    } catch (error) {
+      errorHandle(error);
+    }
+  },
+);
+
 export const fetchNearby = createAsyncThunk(
-  'property/setNearby',
+  'property/fetchNearby',
   async (id: number) => {
     try {
       const { data } = await api.get<Apartments>(`${APIRoute.Apartments}/${id}/nearby`);
@@ -85,7 +106,7 @@ export const fetchNearby = createAsyncThunk(
 );
 
 export const fetchReviews = createAsyncThunk(
-  'property/setReview',
+  'property/fetchReviews',
   async (id: number) => {
     try {
       const { data } = await api.get<Reviews[]>(`${APIRoute.Comments}/${id}`);
@@ -96,14 +117,15 @@ export const fetchReviews = createAsyncThunk(
   },
 );
 
-export const sendComment = createAsyncThunk(
-  'property/loadComment',
-  async (id: number) => {
+export const sendReview = createAsyncThunk(
+  'property/sendReview',
+  async ({ apartmentId, review }: { apartmentId: number, review: Pick<Reviews, 'comment' | 'rating'> }) => {
     try {
-      const { data } = await api.post<Reviews>(`${APIRoute.Comments}/${id}`);
-      store.dispatch(loadComment(data));
+      const { data } = await api.post<Reviews[]>(`${APIRoute.Comments}/${apartmentId}`, review);
+      store.dispatch(setReview(data));
     } catch (error) {
       errorHandle(error);
+      throw error;
     }
-  }
-)
+  },
+);

@@ -1,74 +1,76 @@
-import { ChangeEvent, useState, UIEvent } from 'react';
-import { useAppSelector } from '../../hooks';
+import { ChangeEvent, useState, FormEvent } from 'react';
+import { useAppDispatch } from '../../hooks';
+import { sendReview } from '../../store/api-action';
+import { Apartment } from '../../types/offer-type';
+import { Reviews } from '../../types/comment-types';
+import Star from './star';
 
-export default function CommentForm() {
+const STAR_TITLES: string[] = [
+  'perfect',
+  'good',
+  'not bad',
+  'badly',
+  'terribly',
+];
+const MIN_REVIEW_LENGTH = 50;
+const MAX_REVIEW_LENGTH = 300;
 
-  const currentComment = useAppSelector((state) => state.userComment);
+export type CommentFormProps = {
+  apartment: Apartment;
+}
 
-  const [comment, setComment] = useState({
-    userName: '',
-    date: '',
-    review: '',
+export default function CommentForm({ apartment }: CommentFormProps) {
+  const dispatch = useAppDispatch();
+
+  const [comment, setComment] = useState<Pick<Reviews, 'comment' | 'rating'>>({
+    rating: 0,
+    comment: '',
   });
 
-  const textareaHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  const [isSending, setIsSending] = useState(false);
+
+  const formChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    setComment({ ...comment, [name]: currentComment?.comment });
-    // setComment({ ...comment, [name]: value });
+    setComment({ ...comment, [name]: name === 'rating' ? Number(value) : value });
   };
 
-  const commentSubmit = (event: UIEvent) => {
+  const commentSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (comment.comment.length && comment.rating) {
+      setIsSending(true);
+      const actionResult = await dispatch(sendReview({ apartmentId: apartment.id, review: comment }));
+      if (actionResult.meta.requestStatus === 'fulfilled') {
+        setComment({ rating: 0, comment: '' });
+      }
+      setIsSending(false);
+    }
   };
+  const isReviewLengthCorrect =
+    comment.comment.length >= MIN_REVIEW_LENGTH &&
+    comment.comment.length <= MAX_REVIEW_LENGTH;
 
   return (
 
-    <form className="reviews__form form" action="#" method="post">
+    <form className="reviews__form form" action="" method="post" onSubmit={commentSubmit}>
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
-        <input className="form__rating-input visually-hidden" name="rating" value="5" id="5-stars" type="radio" />
-        <label htmlFor="5-stars" className="reviews__rating-label form__rating-label" title="perfect">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="4" id="4-stars" type="radio" />
-        <label htmlFor="4-stars" className="reviews__rating-label form__rating-label" title="good">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="3" id="3-stars" type="radio" />
-        <label htmlFor="3-stars" className="reviews__rating-label form__rating-label" title="not bad">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="2" id="2-stars" type="radio" />
-        <label htmlFor="2-stars" className="reviews__rating-label form__rating-label" title="badly">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
-
-        <input className="form__rating-input visually-hidden" name="rating" value="1" id="1-star" type="radio" />
-        <label htmlFor="1-star" className="reviews__rating-label form__rating-label" title="terribly">
-          <svg className="form__star-image" width="37" height="33">
-            <use xlinkHref="#icon-star"></use>
-          </svg>
-        </label>
+        {STAR_TITLES.map((title, index) => (
+          <Star
+            key={title}
+            index={index.toString()}
+            title={title}
+            formChangeHandler={formChangeHandler}
+            checkedRating={comment.rating}
+          />
+        ))}
       </div>
-      <textarea className="reviews__textarea form__textarea" id="review" name="review" placeholder="Tell how was your stay, what you like and what can be improved" onChange={textareaHandler} value={comment.review}></textarea>
+      <textarea className="reviews__textarea form__textarea" name="comment" disabled={isSending} placeholder="Tell how was your stay, what you like and what can be improved" onChange={formChangeHandler} value={comment.comment}></textarea>
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={false} onClick={commentSubmit}>Submit
-        </button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={isSending && isReviewLengthCorrect}>Submit</button>
       </div>
     </form>
   );

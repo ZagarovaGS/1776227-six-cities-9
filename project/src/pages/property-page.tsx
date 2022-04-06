@@ -1,38 +1,49 @@
 import Property from '../components/property/property';
 import { useParams } from 'react-router-dom';
 import { Apartments } from '../types/offer-type';
-import { Reviews } from '../types/comment-types';
 import { useAppSelector } from '../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { store } from '../store';
-import { fetchNearby, fetchReviews, sendComment } from '../store/api-action';
+import { fetchApartment, fetchNearby, fetchReviews } from '../store/api-action';
 import NotFoundPage from './not-found-page';
+import { setApartment, setNearby, setReview } from '../store/action';
+import LoadingScreen from '../components/loading-screen';
 
 type PropertyPageProps = {
-  reviews?: Reviews[] | null;
   apartments: Apartments;
 }
 
 export default function PropertyPage({ apartments }: PropertyPageProps) {
   const params = useParams();
+  const [isLoading, setIsLoading] = useState(false);
   const id = Number(params.id);
-  const apartment = apartments.find((item) => item.id === id)!;
+
+  const apartment = useAppSelector((state) => state.apartment);
 
   useEffect(() => {
-    store.dispatch(fetchNearby(id));
-    store.dispatch(fetchReviews(id));
+    (async () => {
+      setIsLoading(true);
+
+      await Promise.all([
+        store.dispatch(fetchApartment(id)),
+        store.dispatch(fetchNearby(id)),
+        store.dispatch(fetchReviews(id)),
+      ]);
+      setIsLoading(false);
+    })();
+    return () => {
+      store.dispatch(setApartment(null));
+      store.dispatch(setNearby([]));
+      store.dispatch(setReview([]));
+    };
   }, [id]);
 
 
-  const nearPlaces = useAppSelector((state) => state.nearby);
-  const commentObject = useAppSelector((state) => state.comments);
-
-
-  if (id && id > apartments.length) {
-    return <NotFoundPage />;
+  if (isLoading) {
+    return <LoadingScreen />;
+  } else if (apartment) {
+    return <Property apartment={apartment} />;
   } else {
-    return (
-      <Property apartment={apartment} reviews={commentObject} apartments={nearPlaces} />
-    );
+    return <NotFoundPage />;
   }
 }

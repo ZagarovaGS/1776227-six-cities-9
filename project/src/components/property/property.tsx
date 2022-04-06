@@ -1,15 +1,22 @@
-import { Apartment, Apartments } from '../../types/offer-type';
+import { Apartment } from '../../types/offer-type';
 import CommentForm from '../comment-form/comment-form';
 import NearPlacesList from '../near-places-list';
 import ReviewsList from '../reviews-list';
 import Map from '../map';
+import { useAppSelector } from '../../hooks';
+import { AuthorizationStatus } from '../../const';
 
 export type PropertyProps = {
   apartment: Apartment;
-  apartments: Apartments;
 }
-export default function Property({ apartment, apartments }: PropertyProps) {
+export default function Property({ apartment }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
+
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+
+  const nearPlaces = useAppSelector((state) => state.nearby);
 
   return (
     <div className="page">
@@ -139,18 +146,19 @@ export default function Property({ apartment, apartments }: PropertyProps) {
 
                 <ReviewsList />
 
-                <CommentForm />
+
+                {isAuth && <CommentForm apartment={apartment} />}
               </section>
             </div>
           </div>
 
-          <Map apartments={apartments} city={apartment.city} mapClassName='property__map' />
+          <Map apartments={nearPlaces} city={apartment.city} mapClassName='property__map' />
 
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <NearPlacesList apartments={apartments} />
+            <NearPlacesList apartments={nearPlaces} />
           </section>
         </div>
       </main>

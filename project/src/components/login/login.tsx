@@ -13,7 +13,7 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
-  let isAuth = false;
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,10 +28,6 @@ export default function Login() {
   const onSubmit = (authData: AuthData) => {
     dispatch(loginAction(authData));
   };
-
-  if (authorizationStatus === AuthorizationStatus.Auth) {
-    isAuth = true;
-  }
 
   return (
     <div className="page page--gray page--login">
@@ -64,7 +60,7 @@ export default function Login() {
             </form>
           </section>
           <section className="locations locations--login locations--current">
-            <div className="locations__item" style={isAuth === false ? { display: 'none' } : { display: 'block' }}>
+            <div className="locations__item" style={isAuth ? {display: 'block'} : {display: 'none'}}>
               <Link className="locations__item-link" to={AppRoute.Main}>
                 <span>Amsterdam</span>
               </Link>
