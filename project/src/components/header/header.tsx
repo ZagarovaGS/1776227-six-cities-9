@@ -4,7 +4,7 @@ import Authorized from './authorized';
 import Unauthorized from './unauthorized';
 
 export default function Header() {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(({ APARTMENTS }) => APARTMENTS.authorizationStatus);
   return (
     <header className="header">
       <div className="container">

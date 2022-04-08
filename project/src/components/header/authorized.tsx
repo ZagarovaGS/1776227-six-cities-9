@@ -6,7 +6,7 @@ import { logoutAction } from '../../store/api-action';
 
 function Authorized(): JSX.Element {
   const dispatch = useAppDispatch();
-  const savedEmail = useAppSelector((state) => state.userData?.email);
+  const savedEmail = useAppSelector(({ USER }) => USER.userData?.email);
 
   return (
     <>

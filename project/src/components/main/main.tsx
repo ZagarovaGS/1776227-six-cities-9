@@ -14,9 +14,9 @@ function Main(): JSX.Element {
     setActiveApartment(apartment);
   };
 
-  const city = useAppSelector((state) => state.city);
-  const apartments = useAppSelector((state) => state.apartments);
-  const currentApartments = useAppSelector((state) => state.currentApartments);
+  const city = useAppSelector(({ APARTMENTS }) => APARTMENTS.city);
+  const apartments = useAppSelector(({ APARTMENTS }) => APARTMENTS.apartments);
+  const currentApartments = useAppSelector(({ APARTMENTS }) => APARTMENTS.currentApartments);
   const [sortBy, setSortBy] = useState<string>(SortMethods.POPULAR);
 
   const sortOptionsHandle = (SortOption: string): void => {

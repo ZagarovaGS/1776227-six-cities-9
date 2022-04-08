@@ -14,7 +14,7 @@ function getLinkClassName(city: string, activeCity: City): string {
 }
 
 function CityList() {
-  const activeCity = useAppSelector((state) => state.city);
+  const activeCity = useAppSelector(({ APARTMENTS }) => APARTMENTS.city);
   const dispatch = useAppDispatch();
 
   return (

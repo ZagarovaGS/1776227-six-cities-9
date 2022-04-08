@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, FormEvent } from 'react';
+import { ChangeEvent, useState, FormEvent, useCallback } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { sendReview } from '../../store/api-action';
 import { Apartment } from '../../types/offer-type';
@@ -29,10 +29,11 @@ export default function CommentForm({ apartment }: CommentFormProps) {
 
   const [isSending, setIsSending] = useState(false);
 
-  const formChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+
+  const formChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setComment({ ...comment, [name]: name === 'rating' ? Number(value) : value });
-  };
+  }, [comment]);
 
   const commentSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -70,7 +71,7 @@ export default function CommentForm({ apartment }: CommentFormProps) {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={isSending && isReviewLengthCorrect}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={isSending && !isReviewLengthCorrect}>Submit</button>
       </div>
     </form>
   );

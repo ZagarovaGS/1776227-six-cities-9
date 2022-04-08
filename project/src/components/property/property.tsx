@@ -12,11 +12,11 @@ export type PropertyProps = {
 export default function Property({ apartment }: PropertyProps) {
   const { previewImage, price, rating, title } = apartment;
 
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(({ APARTMENTS }) => APARTMENTS.authorizationStatus);
 
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
-  const nearPlaces = useAppSelector((state) => state.nearby);
+  const nearPlaces = useAppSelector(({ APARTMENTS }) => APARTMENTS.nearby);
 
   return (
     <div className="page">

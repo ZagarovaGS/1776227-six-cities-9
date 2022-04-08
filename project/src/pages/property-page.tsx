@@ -18,7 +18,7 @@ export default function PropertyPage({ apartments }: PropertyPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const id = Number(params.id);
 
-  const apartment = useAppSelector((state) => state.apartment);
+  const apartment = useAppSelector(({ APARTMENTS }) => APARTMENTS.apartment);
 
   useEffect(() => {
     (async () => {

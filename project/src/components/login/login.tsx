@@ -11,7 +11,7 @@ export default function Login() {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(({ APARTMENTS }) => APARTMENTS.authorizationStatus);
 
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
@@ -60,7 +60,7 @@ export default function Login() {
             </form>
           </section>
           <section className="locations locations--login locations--current">
-            <div className="locations__item" style={isAuth ? {display: 'block'} : {display: 'none'}}>
+            <div className="locations__item" style={isAuth ? { display: 'block' } : { display: 'none' }}>
               <Link className="locations__item-link" to={AppRoute.Main}>
                 <span>Amsterdam</span>
               </Link>

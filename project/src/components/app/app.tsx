@@ -1,14 +1,14 @@
 import React from 'react';
-import {Route, Routes} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import { Route, Routes } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import FavoritiesPage from '../../pages/favorities-page';
 import LoginPage from '../../pages/login-page';
 import NotFoundPage from '../../pages/not-found-page';
 import PropertyPage from '../../pages/property-page';
-import {Reviews} from '../../types/comment-types';
+import { Reviews } from '../../types/comment-types';
 import Layout from '../layout';
 import PrivateRoute from '../private-route/private-route';
-import {useAppSelector} from '../../hooks';
+import { useAppSelector } from '../../hooks';
 import Main from '../main/main';
 import LoadingScreen from '../loading-screen';
 import HistoryRouter from '../history-route/history-route';
@@ -22,9 +22,9 @@ export const isUnknownAuth = (authorizationStatus: AuthorizationStatus): boolean
   authorizationStatus === AuthorizationStatus.Unknown;
 
 function App({ reviews }: AppProps): JSX.Element {
-  const apartments = useAppSelector((state) => state.apartments);
-
-  const { authorizationStatus, isDataLoaded } = useAppSelector((state) => state);
+  const apartments = useAppSelector(({ APARTMENTS }) => APARTMENTS.apartments);
+  const authorizationStatus = useAppSelector(({ APARTMENTS }) => APARTMENTS.authorizationStatus);
+  const isDataLoaded = useAppSelector(({ APARTMENTS }) => APARTMENTS.isDataLoaded);
 
   if (isUnknownAuth(authorizationStatus) || !isDataLoaded) {
     return (

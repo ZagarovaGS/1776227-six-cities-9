@@ -2,21 +2,14 @@ import { Reviews } from './../types/comment-types';
 import { UserData } from './../types/user-data';
 import { AuthData } from './../types/auth-data';
 import { saveToken, dropToken } from './../services/token';
-import {
-  loadApartments,
-  requireAuthorization,
-  setError,
-  setUserData,
-  redirectToRoute,
-  setNearby,
-  setReview,
-  setApartment
-} from './action';
+import { redirectToRoute } from './action';
 import { APIRoute, AuthorizationStatus, TIMEOUT_SHOW_ERROR, AppRoute } from './../const';
 import { Apartment, Apartments } from './../types/offer-type';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { api, store } from './index';
 import { errorHandle } from '../services/error-handle';
+import { loadApartments, setNearby, requireAuthorization, setError, setApartment } from './apartment-process/apartment-process';
+import { setUserData, setReview } from './user-process/user-process';
 
 export const clearErrorAction = createAsyncThunk(
   'game/clearError',
